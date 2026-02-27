@@ -35,7 +35,7 @@ public record HeavyfootEffect(LevelBasedValue radius) implements EnchantmentEnti
                 BlockPos surfacePos = center.offset(x, -1, z);
                 BlockState surfaceState = world.getBlockState(surfacePos);
 
-                if (surfaceState.is(Blocks.GRASS_BLOCK)) {
+                if (isFlattenable(surfaceState)) {
                     world.setBlockAndUpdate(surfacePos, Blocks.DIRT_PATH.defaultBlockState());
                 }
 
@@ -55,6 +55,16 @@ public record HeavyfootEffect(LevelBasedValue radius) implements EnchantmentEnti
                 }
             }
         }
+    }
+
+    private static boolean isFlattenable(BlockState state) {
+        Block block = state.getBlock();
+        return block == Blocks.GRASS_BLOCK
+                || block == Blocks.DIRT
+                || block == Blocks.COARSE_DIRT
+                || block == Blocks.PODZOL
+                || block == Blocks.MYCELIUM
+                || block == Blocks.ROOTED_DIRT;
     }
 
     private static boolean isDestructible(BlockState state) {
