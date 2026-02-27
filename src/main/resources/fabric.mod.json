@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "specialboots",
+  "version": "${version}",
+  "name": "Special Boots",
+  "description": "Adds the Heavyfoot enchantment for boots that destroys foliage and creates paths as you walk.",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.example.specialboots.SpecialBoots"
+    ],
+    "client": [
+      "com.example.specialboots.SpecialBootsClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
