@@ -1,13 +1,21 @@
 # Special Boots
 
-A Fabric mod for Minecraft 1.21.11 that adds the **Heavyfoot** enchantment.
+A Fabric mod for Minecraft 1.21.11 that adds boot enchantments: **Heavyfoot** and **Lightfoot**.
 
 ## What it does
 
-Heavyfoot is a single-level enchantment that can only be applied to boots. While wearing enchanted boots, the player automatically:
+Both enchantments are single-level and can only be applied to boots.
+
+### Heavyfoot
+
+While wearing enchanted boots, the player automatically:
 
 - **Destroys flowers and bushes** (short grass, tall grass, ferns, dead bushes, sweet berry bushes, and all flowers) in a small area around their feet.
 - **Converts grass blocks into dirt paths** beneath their steps.
+
+### Lightfoot
+
+Prevents farmland from being trampled when the player jumps on it, protecting crops from being destroyed.
 
 ## Requirements
 
@@ -22,10 +30,11 @@ Heavyfoot is a single-level enchantment that can only be applied to boots. While
 3. Download the latest `specialboots-x.x.x.jar` from the releases and place it in your `mods/` folder.
 4. Launch the game.
 
-You can apply the enchantment to boots using an enchanting table, anvil with an enchanted book, or the command:
+You can apply the enchantments to boots using an enchanting table, anvil with an enchanted book, or the commands:
 
 ```
 /enchant @s specialboots:heavyfoot
+/enchant @s specialboots:lightfoot
 ```
 
 ## Building from source

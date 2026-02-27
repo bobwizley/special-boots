@@ -14,6 +14,9 @@ public class ModEnchantmentEffects {
     public static final ResourceKey<Enchantment> HEAVYFOOT =
             ResourceKey.create(Registries.ENCHANTMENT, Identifier.fromNamespaceAndPath("specialboots", "heavyfoot"));
 
+    public static final ResourceKey<Enchantment> LIGHTFOOT =
+            ResourceKey.create(Registries.ENCHANTMENT, Identifier.fromNamespaceAndPath("specialboots", "lightfoot"));
+
     public static final MapCodec<HeavyfootEffect> HEAVYFOOT_EFFECT =
             register("heavyfoot", HeavyfootEffect.CODEC);
 

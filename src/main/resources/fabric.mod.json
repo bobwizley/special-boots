@@ -3,11 +3,14 @@
   "id": "specialboots",
   "version": "${version}",
   "name": "Special Boots",
-  "description": "Adds the Heavyfoot enchantment for boots that destroys foliage and creates paths as you walk.",
+  "description": "Adds boot enchantments: Heavyfoot destroys foliage and creates paths; Lightfoot prevents crop trampling.",
   "authors": [],
   "contact": {},
   "license": "MIT",
   "environment": "*",
+  "mixins": [
+    "specialboots.mixins.json"
+  ],
   "entrypoints": {
     "main": [
       "com.example.specialboots.SpecialBoots"
