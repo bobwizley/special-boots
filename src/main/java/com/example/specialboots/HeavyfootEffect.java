@@ -27,7 +27,7 @@ public record HeavyfootEffect(LevelBasedValue radius) implements EnchantmentEnti
     public void apply(ServerLevel world, int level, EnchantedItemInUse context, Entity target, Vec3 pos) {
         if (!(target instanceof Player)) return;
 
-        int r = (int) radius.calculate(level);
+        int r = ModConfig.getInstance().getRadius();
         BlockPos center = target.blockPosition();
 
         for (int x = -r; x <= r; x++) {

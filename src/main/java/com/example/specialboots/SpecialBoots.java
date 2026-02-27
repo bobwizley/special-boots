@@ -12,5 +12,6 @@ public class SpecialBoots implements ModInitializer {
     @Override
     public void onInitialize() {
         ModEnchantmentEffects.register();
+        ModConfig.getInstance();
     }
 }
