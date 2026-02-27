@@ -29,6 +29,10 @@ public class ModConfig {
         return radius;
     }
 
+    public void setRadius(int radius) {
+        this.radius = Math.max(0, Math.min(2, radius));
+    }
+
     private static ModConfig load() {
         if (Files.exists(CONFIG_PATH)) {
             try (Reader reader = Files.newBufferedReader(CONFIG_PATH)) {
@@ -48,10 +52,10 @@ public class ModConfig {
     }
 
     private void clamp() {
-        radius = Math.max(0, Math.min(5, radius));
+        radius = Math.max(0, Math.min(2, radius));
     }
 
-    private void save() {
+    public void save() {
         try {
             Files.createDirectories(CONFIG_PATH.getParent());
             try (Writer writer = Files.newBufferedWriter(CONFIG_PATH)) {

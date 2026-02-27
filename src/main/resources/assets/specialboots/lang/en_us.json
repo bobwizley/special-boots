@@ -1,3 +1,7 @@
 {
-  "enchantment.specialboots.heavyfoot": "Heavyfoot"
+  "enchantment.specialboots.heavyfoot": "Heavyfoot",
+  "title.specialboots.config": "Special Boots Config",
+  "category.specialboots.general": "General",
+  "option.specialboots.radius": "Effect Radius",
+  "option.specialboots.radius.tooltip": "Number of blocks around the player affected by Heavyfoot (0 = only below feet, max 2)"
 }
