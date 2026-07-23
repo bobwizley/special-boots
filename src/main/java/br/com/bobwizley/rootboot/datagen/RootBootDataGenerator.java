@@ -9,5 +9,8 @@ public final class RootBootDataGenerator implements DataGeneratorEntrypoint {
     public void onInitializeDataGenerator(FabricDataGenerator generator) {
         FabricDataGenerator.Pack pack = generator.createPack();
         pack.addProvider(RootBootRecipeProvider::new);
+        pack.addProvider(
+                (output, registries) ->
+                        new BetterTreesConfiguredFeatureProvider(output, registries));
     }
 }
