@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "rootboot-gametest",
+  "version": "1.0.0",
+  "name": "RootBoot Game Tests",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-gametest": [
+      "br.com.bobwizley.rootboot.feature.homingexperienceorb.HomingExperienceOrbGameTests"
+    ]
+  },
+  "depends": {
+    "fabricloader": "*",
+    "minecraft": "*",
+    "fabric-api": "*",
+    "rootboot": "*"
+  }
+}

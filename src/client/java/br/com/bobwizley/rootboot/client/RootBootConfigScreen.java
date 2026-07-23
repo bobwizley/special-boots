@@ -3,6 +3,7 @@ package br.com.bobwizley.rootboot.client;
 import br.com.bobwizley.rootboot.RootBoot;
 import br.com.bobwizley.rootboot.config.RootBootConfig;
 import br.com.bobwizley.rootboot.feature.dayannouncement.DayAnnouncementFeature;
+import br.com.bobwizley.rootboot.feature.homingexperienceorb.HomingExperienceOrbFeature;
 import br.com.bobwizley.rootboot.feature.levelmilestone.LevelMilestoneFeature;
 import br.com.bobwizley.rootboot.feature.timeoffset.TimeOffsetFeature;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
@@ -52,6 +53,15 @@ public final class RootBootConfigScreen {
                 .setDefaultValue(true)
                 .setTooltip(Component.translatable("option.rootboot.level_milestone.tooltip"))
                 .setSaveConsumer(value -> config.setEnabled(LevelMilestoneFeature.ID, value))
+                .build());
+
+        general.addEntry(entries.startBooleanToggle(
+                        Component.translatable("option.rootboot.homing_experience_orb"),
+                        config.isEnabled(HomingExperienceOrbFeature.ID))
+                .setDefaultValue(true)
+                .setTooltip(Component.translatable(
+                        "option.rootboot.homing_experience_orb.tooltip"))
+                .setSaveConsumer(value -> config.setEnabled(HomingExperienceOrbFeature.ID, value))
                 .build());
 
         return builder.build();

@@ -8,6 +8,8 @@
   "option.rootboot.day_announcement.tooltip": "Shows the global Overworld day on the action bar at dawn and when joining a world.",
   "option.rootboot.level_milestone": "Level Milestone",
   "option.rootboot.level_milestone.tooltip": "Plays a local animation when your experience level crosses a multiple of 5. Visible only to you and never triggered by level decreases.",
+  "option.rootboot.homing_experience_orb": "Homing Experience Orbs",
+  "option.rootboot.homing_experience_orb.tooltip": "Makes experience orbs pursue the nearest non-spectator player within 64 blocks after a short delay.",
   "message.rootboot.day_announcement": "— DAY %s —",
   "message.rootboot.day_announcement.typing.dash": "—",
   "message.rootboot.day_announcement.typing.double_dash": "——",
