@@ -4,4 +4,8 @@
 .gradle/
 build/
 run/
+logs/
 *.log
+
+# Datagen cache (the generated JSON under src/main/generated is committed; its cache is not)
+src/main/generated/.cache/

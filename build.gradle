@@ -26,6 +26,16 @@ loom {
     }
 }
 
+fabricApi {
+    configureDataGeneration {
+        // Generated JSON is committed here and packaged into the JAR; it is never edited by hand
+        // (ADR-0003). The datagen entrypoint lives in the main source set alongside the providers.
+        outputDirectory = file("src/main/generated")
+        createSourceSet = false
+        strictValidation = true
+    }
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     // Minecraft 26.1+ ships unobfuscated, so the no-remap fabric-loom plugin needs neither a

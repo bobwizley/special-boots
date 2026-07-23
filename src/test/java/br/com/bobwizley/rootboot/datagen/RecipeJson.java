@@ -1,0 +1,60 @@
+package br.com.bobwizley.rootboot.datagen;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import br.com.bobwizley.rootboot.recipe.RecipeSpec;
+import br.com.bobwizley.rootboot.recipe.RecipeSpec.Ingredient;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/** Asserts that a recipe JSON object (generated file or codec output) matches a {@link RecipeSpec}. */
+final class RecipeJson {
+
+    private RecipeJson() {
+    }
+
+    static void assertMatchesSpec(RecipeSpec spec, JsonObject json) {
+        assertEquals(spec.result().item(), json.getAsJsonObject("result").get("id").getAsString());
+        assertEquals(spec.result().count(), resultCount(json));
+        switch (spec) {
+            case RecipeSpec.Shaped shaped -> assertShaped(shaped, json);
+            case RecipeSpec.Shapeless shapeless -> assertShapeless(shapeless, json);
+        }
+    }
+
+    private static void assertShaped(RecipeSpec.Shaped spec, JsonObject json) {
+        assertEquals("minecraft:crafting_shaped", json.get("type").getAsString());
+
+        List<String> pattern =
+                json.getAsJsonArray("pattern").asList().stream()
+                        .map(JsonElement::getAsString)
+                        .collect(Collectors.toList());
+        assertEquals(spec.pattern(), pattern);
+
+        JsonObject key = json.getAsJsonObject("key");
+        spec.key()
+                .forEach(
+                        (symbol, ingredient) ->
+                                assertEquals(
+                                        ingredient.reference(), key.get(String.valueOf(symbol)).getAsString()));
+    }
+
+    private static void assertShapeless(RecipeSpec.Shapeless spec, JsonObject json) {
+        assertEquals("minecraft:crafting_shapeless", json.get("type").getAsString());
+
+        List<String> actual =
+                json.getAsJsonArray("ingredients").asList().stream()
+                        .map(JsonElement::getAsString)
+                        .collect(Collectors.toList());
+        List<String> expected =
+                spec.ingredients().stream().map(Ingredient::reference).collect(Collectors.toList());
+        assertEquals(expected, actual);
+    }
+
+    private static int resultCount(JsonObject json) {
+        JsonObject result = json.getAsJsonObject("result");
+        return result.has("count") ? result.get("count").getAsInt() : 1;
+    }
+}

@@ -19,6 +19,9 @@
     ],
     "modmenu": [
       "br.com.bobwizley.rootboot.client.RootBootModMenu"
+    ],
+    "fabric-datagen": [
+      "br.com.bobwizley.rootboot.datagen.RootBootDataGenerator"
     ]
   },
   "depends": {
