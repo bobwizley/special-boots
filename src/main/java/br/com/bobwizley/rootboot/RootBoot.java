@@ -2,6 +2,7 @@ package br.com.bobwizley.rootboot;
 
 import br.com.bobwizley.rootboot.config.RootBootConfig;
 import br.com.bobwizley.rootboot.feature.FeatureRegistry;
+import br.com.bobwizley.rootboot.feature.biomediscovery.BiomeDiscoveryFeature;
 import br.com.bobwizley.rootboot.feature.dayannouncement.DayAnnouncementFeature;
 import br.com.bobwizley.rootboot.feature.deathitemprotection.DeathItemProtectionFeature;
 import br.com.bobwizley.rootboot.feature.homingexperienceorb.HomingExperienceOrbFeature;
@@ -43,7 +44,8 @@ public final class RootBoot implements ModInitializer {
                 new DayAnnouncementFeature(),
                 new LevelMilestoneFeature(),
                 new HomingExperienceOrbFeature(),
-                new DeathItemProtectionFeature()));
+                new DeathItemProtectionFeature(),
+                new BiomeDiscoveryFeature()));
         if (cfg.ensureKeys(registry.featureIds())) {
             cfg.save(configPath());
         }

@@ -12,6 +12,8 @@
   "option.rootboot.homing_experience_orb.tooltip": "Makes experience orbs pursue the nearest non-spectator player within 64 blocks after a short delay.",
   "option.rootboot.death_item_protection": "Death Items Don't Despawn",
   "option.rootboot.death_item_protection.tooltip": "Prevents items dropped on death from despawning over time. They remain vulnerable to fire, lava, explosions, cacti, the void, and other hazards.",
+  "option.rootboot.biome_discovery": "Biome Discovery",
+  "option.rootboot.biome_discovery.tooltip": "Shows a local title the first time you enter each vanilla or modded biome.",
   "message.rootboot.day_announcement": "— DAY %s —",
   "message.rootboot.day_announcement.typing.dash": "—",
   "message.rootboot.day_announcement.typing.double_dash": "——",

@@ -2,6 +2,7 @@ package br.com.bobwizley.rootboot.client;
 
 import br.com.bobwizley.rootboot.RootBoot;
 import br.com.bobwizley.rootboot.config.RootBootConfig;
+import br.com.bobwizley.rootboot.feature.biomediscovery.BiomeDiscoveryFeature;
 import br.com.bobwizley.rootboot.feature.dayannouncement.DayAnnouncementFeature;
 import br.com.bobwizley.rootboot.feature.deathitemprotection.DeathItemProtectionFeature;
 import br.com.bobwizley.rootboot.feature.homingexperienceorb.HomingExperienceOrbFeature;
@@ -72,6 +73,14 @@ public final class RootBootConfigScreen {
                 .setTooltip(Component.translatable(
                         "option.rootboot.death_item_protection.tooltip"))
                 .setSaveConsumer(value -> config.setEnabled(DeathItemProtectionFeature.ID, value))
+                .build());
+
+        general.addEntry(entries.startBooleanToggle(
+                        Component.translatable("option.rootboot.biome_discovery"),
+                        config.isEnabled(BiomeDiscoveryFeature.ID))
+                .setDefaultValue(true)
+                .setTooltip(Component.translatable("option.rootboot.biome_discovery.tooltip"))
+                .setSaveConsumer(value -> config.setEnabled(BiomeDiscoveryFeature.ID, value))
                 .build());
 
         return builder.build();
