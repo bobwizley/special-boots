@@ -6,5 +6,11 @@
   "option.rootboot.time_offset.tooltip": "Starts new worlds on day 1 by adding one day at world creation. Affects only worlds created afterwards; existing worlds are never changed.",
   "option.rootboot.day_announcement": "Day Announcement",
   "option.rootboot.day_announcement.tooltip": "Shows the global Overworld day on the action bar at dawn and when joining a world.",
-  "message.rootboot.day_announcement": "— DAY %s —"
+  "message.rootboot.day_announcement": "— DAY %s —",
+  "message.rootboot.day_announcement.typing.dash": "—",
+  "message.rootboot.day_announcement.typing.double_dash": "——",
+  "message.rootboot.day_announcement.typing.empty": "— —",
+  "message.rootboot.day_announcement.typing.d": "— D —",
+  "message.rootboot.day_announcement.typing.da": "— DA —",
+  "message.rootboot.day_announcement.typing.day": "— DAY —"
 }

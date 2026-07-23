@@ -6,12 +6,17 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.protocol.game.ClientboundSoundEntityPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 
 public final class DayAnnouncementFeature implements Feature {
 
@@ -45,19 +50,47 @@ public final class DayAnnouncementFeature implements Feature {
 
     private static void present(ServerPlayer player, DayAnnouncementFrame frame) {
         Style style = Style.EMPTY.withColor(frame.color()).withBold(frame.bold());
-        player.sendOverlayMessage(
-                Component.translatable("message.rootboot.day_announcement", frame.day()).withStyle(style));
+        MutableComponent message = frame.partialTranslationKey() != null
+                ? Component.translatable(frame.partialTranslationKey())
+                : Component.translatable("message.rootboot.day_announcement", frame.day());
+        player.sendOverlayMessage(message.withStyle(style));
         for (DayAnnouncementFrame.Sound sound : frame.sounds()) {
-            player.playSound(soundEvent(sound), 1.0F, 1.0F);
+            SoundSettings settings = soundSettings(sound);
+            player.connection.send(new ClientboundSoundEntityPacket(
+                    soundEvent(sound),
+                    settings.source(),
+                    player,
+                    settings.volume(),
+                    settings.pitch(),
+                    player.getRandom().nextLong()));
         }
     }
 
-    private static SoundEvent soundEvent(DayAnnouncementFrame.Sound sound) {
+    static SoundSettings soundSettings(DayAnnouncementFrame.Sound sound) {
         return switch (sound) {
-            case CLICK -> SoundEvents.UI_BUTTON_CLICK.value();
-            case LODESTONE -> SoundEvents.VAULT_PLACE;
-            case AMETHYST -> SoundEvents.AMETHYST_BLOCK_STEP;
-            case CHIME -> SoundEvents.AMETHYST_BLOCK_CHIME;
+            case CLICK -> new SoundSettings(0.4F, 2.0F);
+            case LODESTONE, AMETHYST -> new SoundSettings(1.0F, 0.63F);
+            case CHIME -> new SoundSettings(1.0F, 0.8F);
         };
+    }
+
+    private static Holder<SoundEvent> soundEvent(DayAnnouncementFrame.Sound sound) {
+        return switch (sound) {
+            case CLICK -> SoundEvents.UI_BUTTON_CLICK;
+            case LODESTONE -> holder(SoundEvents.VAULT_PLACE);
+            case AMETHYST -> holder(SoundEvents.AMETHYST_BLOCK_STEP);
+            case CHIME -> holder(SoundEvents.AMETHYST_BLOCK_CHIME);
+        };
+    }
+
+    private static Holder<SoundEvent> holder(SoundEvent sound) {
+        return BuiltInRegistries.SOUND_EVENT.wrapAsHolder(sound);
+    }
+
+    record SoundSettings(float volume, float pitch) {
+
+        SoundSource source() {
+            return SoundSource.MASTER;
+        }
     }
 }
