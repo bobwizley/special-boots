@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "rootboot",
+  "version": "${version}",
+  "name": "RootBoot",
+  "description": "Mod agregador para Minecraft 26.2 (Fabric) que reimplementa em Java funcionalidades de vários mods e datapacks de referencia, cada uma ligavel de forma independente.",
+  "authors": [
+    "Bob Wizley"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "br.com.bobwizley.rootboot.RootBoot"
+    ],
+    "client": [
+      "br.com.bobwizley.rootboot.client.RootBootClient"
+    ],
+    "modmenu": [
+      "br.com.bobwizley.rootboot.client.RootBootModMenu"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "minecraft": "~26.2",
+    "java": ">=25",
+    "fabric-api": "*",
+    "cloth-config": "*"
+  },
+  "suggests": {
+    "modmenu": "*"
+  }
+}

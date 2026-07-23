@@ -1,0 +1,7 @@
+{
+  "title.rootboot.config": "RootBoot",
+  "category.rootboot.general": "General",
+  "text.rootboot.restart_required": "Changes take effect only after restarting the game or server.",
+  "option.rootboot.time_offset": "Time Offset",
+  "option.rootboot.time_offset.tooltip": "Starts new worlds on day 1 by adding one day at world creation. Affects only worlds created afterwards; existing worlds are never changed."
+}

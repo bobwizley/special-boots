@@ -6,6 +6,8 @@ author: Bob Wizley
 status: accepted
 ---
 
+> **Refinada pela ADR-0007:** a intenção (nomenclatura oficial da Mojang) permanece, mas o Minecraft 26.2 vem desofuscado e não publica mais arquivo de mappings — o mecanismo (`officialMojangMappings()`) é substituído por "JAR desofuscado, sem mappings".
+
 ## Context
 
 O código Java referencia classes do Minecraft cujos nomes dependem da mapping escolhida. A escolha trava toda a base de código e é cara de reverter depois. As duas opções no ecossistema Fabric são Yarn (mappings da comunidade) e Mojmap (mappings oficiais da Mojang).

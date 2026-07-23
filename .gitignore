@@ -1,1 +1,7 @@
 /refs/
+
+# Gradle / Loom
+.gradle/
+build/
+run/
+*.log
