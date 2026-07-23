@@ -2,6 +2,7 @@ package br.com.bobwizley.rootboot;
 
 import br.com.bobwizley.rootboot.config.RootBootConfig;
 import br.com.bobwizley.rootboot.feature.FeatureRegistry;
+import br.com.bobwizley.rootboot.feature.dayannouncement.DayAnnouncementFeature;
 import br.com.bobwizley.rootboot.feature.timeoffset.TimeOffsetFeature;
 import br.com.bobwizley.rootboot.feature.timeoffset.TimeOffsetWorldInitializer;
 import java.nio.file.Path;
@@ -34,7 +35,8 @@ public final class RootBoot implements ModInitializer {
     public void onInitialize() {
         RootBootConfig cfg = config();
 
-        FeatureRegistry registry = new FeatureRegistry(List.of(new TimeOffsetFeature()));
+        FeatureRegistry registry =
+                new FeatureRegistry(List.of(new TimeOffsetFeature(), new DayAnnouncementFeature()));
         if (cfg.ensureKeys(registry.featureIds())) {
             cfg.save(configPath());
         }

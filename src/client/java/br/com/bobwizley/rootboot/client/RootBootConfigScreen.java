@@ -2,6 +2,7 @@ package br.com.bobwizley.rootboot.client;
 
 import br.com.bobwizley.rootboot.RootBoot;
 import br.com.bobwizley.rootboot.config.RootBootConfig;
+import br.com.bobwizley.rootboot.feature.dayannouncement.DayAnnouncementFeature;
 import br.com.bobwizley.rootboot.feature.timeoffset.TimeOffsetFeature;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
@@ -34,6 +35,14 @@ public final class RootBootConfigScreen {
                 .setDefaultValue(true)
                 .setTooltip(Component.translatable("option.rootboot.time_offset.tooltip"))
                 .setSaveConsumer(value -> config.setEnabled(TimeOffsetFeature.ID, value))
+                .build());
+
+        general.addEntry(entries.startBooleanToggle(
+                        Component.translatable("option.rootboot.day_announcement"),
+                        config.isEnabled(DayAnnouncementFeature.ID))
+                .setDefaultValue(true)
+                .setTooltip(Component.translatable("option.rootboot.day_announcement.tooltip"))
+                .setSaveConsumer(value -> config.setEnabled(DayAnnouncementFeature.ID, value))
                 .build());
 
         return builder.build();
