@@ -6,6 +6,7 @@
   "environment": "*",
   "entrypoints": {
     "fabric-gametest": [
+      "br.com.bobwizley.rootboot.feature.deathitemprotection.DeathItemProtectionGameTests",
       "br.com.bobwizley.rootboot.feature.homingexperienceorb.HomingExperienceOrbGameTests"
     ]
   },

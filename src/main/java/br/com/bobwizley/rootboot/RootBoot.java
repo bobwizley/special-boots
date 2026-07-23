@@ -3,6 +3,7 @@ package br.com.bobwizley.rootboot;
 import br.com.bobwizley.rootboot.config.RootBootConfig;
 import br.com.bobwizley.rootboot.feature.FeatureRegistry;
 import br.com.bobwizley.rootboot.feature.dayannouncement.DayAnnouncementFeature;
+import br.com.bobwizley.rootboot.feature.deathitemprotection.DeathItemProtectionFeature;
 import br.com.bobwizley.rootboot.feature.homingexperienceorb.HomingExperienceOrbFeature;
 import br.com.bobwizley.rootboot.feature.levelmilestone.LevelMilestoneFeature;
 import br.com.bobwizley.rootboot.feature.timeoffset.TimeOffsetFeature;
@@ -41,7 +42,8 @@ public final class RootBoot implements ModInitializer {
                 new TimeOffsetFeature(),
                 new DayAnnouncementFeature(),
                 new LevelMilestoneFeature(),
-                new HomingExperienceOrbFeature()));
+                new HomingExperienceOrbFeature(),
+                new DeathItemProtectionFeature()));
         if (cfg.ensureKeys(registry.featureIds())) {
             cfg.save(configPath());
         }
