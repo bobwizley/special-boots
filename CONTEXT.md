@@ -181,3 +181,19 @@ _Avoid_: migração retroativa, offset reversível
 **Cabeça de jogador protegida**:
 Entidade de item original gerada pelo RootBoot na morte, que permanece invulnerável e sem despawn até ser coletada. Desabilitar Player Head Drop impede novos drops, mas não remove a proteção das entidades já existentes. Ao entrar em um inventário, a proteção termina; se a cabeça for descartada novamente, segue dano e despawn vanilla.
 _Avoid_: desproteção retroativa, item permanentemente marcado
+
+**Grupo de spawners simultâneos**:
+Conjunto máximo de pelo menos dois blocos `minecraft:spawner` para os quais existe um único ponto de ativação comum. Nenhum outro spawner pode ser acrescentado sem eliminar esse ponto, e seus subconjuntos não são resultados separados. Grupos máximos distintos podem compartilhar spawners. A proximidade isolada entre cada par não basta para formar um grupo; `minecraft:trial_spawner` não participa.
+_Avoid_: par de spawners, subconjunto redundante, grupo necessariamente disjunto, spawners apenas próximos, trial spawner
+
+**Ponto de ativação comum**:
+Posição de coordenadas X, Y e Z inteiras situada a menos de 16 blocos do centro de cada spawner de um grupo, a partir da qual um único jogador pode ativar todos simultaneamente. A comparação reproduz o limite estrito do Minecraft 26.2: estar exatamente a 16 blocos não ativa o spawner. A posição não precisa estar vazia, possuir piso nem ser atualmente acessível. Uma interseção geométrica que contenha apenas pontos fracionários não basta.
+_Avoid_: centro do grupo, posição fracionária, posição de um spawner, posição transitável
+
+**Ponto ótimo de ativação**:
+Ponto de ativação comum inteiro que minimiza a maior distância até qualquer spawner do grupo. É o ponto apresentado pelo scanner para oferecer a maior margem possível de ativação simultânea e não resulta do arredondamento de um ponto fracionário.
+_Avoid_: ponto válido arbitrário, ponto fracionário arredondado, média das posições
+
+**Território examinável pelo scanner de spawners**:
+Todos os chunks gerados e salvos do Overworld, independentemente da distância até o spawn do mundo. Chunks ainda não gerados não pertencem ao território examinável.
+_Avoid_: chunks carregados, raio do spawn, território inexplorado

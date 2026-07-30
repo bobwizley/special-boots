@@ -16,9 +16,17 @@ repositories {
 }
 
 sourceSets {
+    tools {
+        compileClasspath += sourceSets.main.compileClasspath
+        runtimeClasspath += output + compileClasspath
+    }
     gametest {
         compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
         runtimeClasspath += output + sourceSets.main.runtimeClasspath
+    }
+    test {
+        compileClasspath += sourceSets.tools.output
+        runtimeClasspath += sourceSets.tools.output
     }
 }
 
@@ -81,10 +89,19 @@ processResources {
 
 test {
     useJUnitPlatform()
+    jvmArgs "--sun-misc-unsafe-memory-access=allow"
 }
 
 tasks.withType(JavaCompile).configureEach {
     it.options.release = 25
+}
+
+tasks.register("scanSpawners", JavaExec) {
+    group = "application"
+    description = "Scans a closed Minecraft world for simultaneously activatable spawners."
+    classpath = sourceSets.tools.runtimeClasspath
+    mainClass = "br.com.bobwizley.rootboot.tools.spawners.SpawnerScannerCli"
+    jvmArgs "--sun-misc-unsafe-memory-access=allow"
 }
 
 java {
