@@ -1,5 +1,6 @@
 package br.com.bobwizley.rootboot.config;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -29,6 +30,30 @@ class RootBootConfigTest {
         assertTrue(config.ensureKeys(List.of("time_offset")));
         assertTrue(config.isEnabled("time_offset"));
         assertFalse(config.ensureKeys(List.of("time_offset")));
+    }
+
+    @Test
+    void heavyfootRadiusDefaultsToOneAndStaysInRange(@TempDir Path dir) {
+        RootBootConfig config = RootBootConfig.load(dir.resolve("rootboot.json"));
+
+        assertEquals(1, config.heavyfootRadius());
+
+        config.setHeavyfootRadius(2);
+        assertEquals(2, config.heavyfootRadius());
+
+        config.setHeavyfootRadius(7);
+        assertEquals(2, config.heavyfootRadius());
+
+        config.setHeavyfootRadius(-1);
+        assertEquals(0, config.heavyfootRadius());
+    }
+
+    @Test
+    void heavyfootRadiusOutOfRangeInFileIsClamped(@TempDir Path dir) throws IOException {
+        Path file = dir.resolve("rootboot.json");
+        Files.writeString(file, "{ \"heavyfootRadius\": 9 }");
+
+        assertEquals(2, RootBootConfig.load(file).heavyfootRadius());
     }
 
     @Test

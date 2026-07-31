@@ -3,6 +3,15 @@
   "description": {
     "translate": "enchantment.rootboot.heavyfoot"
   },
+  "effects": {
+    "minecraft:tick": [
+      {
+        "effect": {
+          "type": "rootboot:heavyfoot"
+        }
+      }
+    ]
+  },
   "exclusive_set": "#rootboot:exclusive_set/special_boots",
   "max_cost": {
     "base": 45,

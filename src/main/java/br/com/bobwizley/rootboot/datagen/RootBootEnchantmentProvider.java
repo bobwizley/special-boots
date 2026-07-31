@@ -1,6 +1,7 @@
 package br.com.bobwizley.rootboot.datagen;
 
 import br.com.bobwizley.rootboot.enchantment.RootBootEnchantments;
+import br.com.bobwizley.rootboot.feature.heavyfoot.HeavyfootEffect;
 import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
@@ -10,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 
 public final class RootBootEnchantmentProvider extends FabricDynamicRegistryProvider {
 
@@ -35,6 +37,9 @@ public final class RootBootEnchantmentProvider extends FabricDynamicRegistryProv
                         )
                 ).exclusiveWith(
                         registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(RootBootEnchantments.EXCLUSIVE_SPECIAL_BOOTS)
+                ).withEffect(
+                        EnchantmentEffectComponents.TICK,
+                        new HeavyfootEffect()
                 ).build(net.minecraft.resources.Identifier.fromNamespaceAndPath(br.com.bobwizley.rootboot.RootBoot.MOD_ID, "heavyfoot"))
         );
 

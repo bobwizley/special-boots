@@ -24,7 +24,12 @@ public final class RootBootConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger("rootboot-config");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
+    public static final int HEAVYFOOT_RADIUS_MIN = 0;
+    public static final int HEAVYFOOT_RADIUS_MAX = 2;
+    public static final int HEAVYFOOT_RADIUS_DEFAULT = 1;
+
     private Map<String, Boolean> features = new LinkedHashMap<>();
+    private int heavyfootRadius = HEAVYFOOT_RADIUS_DEFAULT;
 
     public boolean isEnabled(String featureId) {
         return features.getOrDefault(featureId, true);
@@ -32,6 +37,14 @@ public final class RootBootConfig {
 
     public void setEnabled(String featureId, boolean enabled) {
         features.put(featureId, enabled);
+    }
+
+    public int heavyfootRadius() {
+        return heavyfootRadius;
+    }
+
+    public void setHeavyfootRadius(int radius) {
+        heavyfootRadius = clampHeavyfootRadius(radius);
     }
 
     public boolean ensureKeys(Collection<String> featureIds) {
@@ -60,7 +73,12 @@ public final class RootBootConfig {
         if (config.features == null) {
             config.features = new LinkedHashMap<>();
         }
+        config.heavyfootRadius = clampHeavyfootRadius(config.heavyfootRadius);
         return config;
+    }
+
+    private static int clampHeavyfootRadius(int radius) {
+        return Math.max(HEAVYFOOT_RADIUS_MIN, Math.min(HEAVYFOOT_RADIUS_MAX, radius));
     }
 
     public void save(Path path) {

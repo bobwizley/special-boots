@@ -93,6 +93,16 @@ public final class RootBootConfigScreen {
                 .setSaveConsumer(value -> config.setEnabled(HeavyfootFeature.ID, value))
                 .build());
 
+        general.addEntry(entries.startIntSlider(
+                        Component.translatable("option.rootboot.heavyfoot_radius"),
+                        config.heavyfootRadius(),
+                        RootBootConfig.HEAVYFOOT_RADIUS_MIN,
+                        RootBootConfig.HEAVYFOOT_RADIUS_MAX)
+                .setDefaultValue(RootBootConfig.HEAVYFOOT_RADIUS_DEFAULT)
+                .setTooltip(Component.translatable("option.rootboot.heavyfoot_radius.tooltip"))
+                .setSaveConsumer(config::setHeavyfootRadius)
+                .build());
+
         general.addEntry(entries.startBooleanToggle(
                         Component.translatable("option.rootboot.lightfoot"),
                         config.isEnabled(LightfootFeature.ID))

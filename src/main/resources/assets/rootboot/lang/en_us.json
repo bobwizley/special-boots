@@ -16,6 +16,8 @@
   "option.rootboot.biome_discovery.tooltip": "Shows a local title the first time you enter each vanilla or modded biome.",
   "option.rootboot.heavyfoot": "Heavyfoot",
   "option.rootboot.heavyfoot.tooltip": "Enables the Heavyfoot effect on enchanted boots.",
+  "option.rootboot.heavyfoot_radius": "Heavyfoot Radius",
+  "option.rootboot.heavyfoot_radius.tooltip": "Size of the square area affected around the block you occupy: 0 affects 1x1, 1 affects 3x3 and 2 affects 5x5.",
   "option.rootboot.lightfoot": "Lightfoot",
   "option.rootboot.lightfoot.tooltip": "Enables the Lightfoot effect on enchanted boots.",
   "enchantment.rootboot.heavyfoot": "Heavyfoot",

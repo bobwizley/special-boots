@@ -1,6 +1,7 @@
 package br.com.bobwizley.rootboot;
 
 import br.com.bobwizley.rootboot.config.RootBootConfig;
+import br.com.bobwizley.rootboot.enchantment.RootBootEnchantmentEffects;
 import br.com.bobwizley.rootboot.feature.FeatureRegistry;
 import br.com.bobwizley.rootboot.feature.biomediscovery.BiomeDiscoveryFeature;
 import br.com.bobwizley.rootboot.feature.dayannouncement.DayAnnouncementFeature;
@@ -41,6 +42,8 @@ public final class RootBoot implements ModInitializer {
     public void onInitialize() {
         RootBootConfig cfg = config();
 
+        RootBootEnchantmentEffects.register();
+
         FeatureRegistry registry = new FeatureRegistry(List.of(
                 new TimeOffsetFeature(),
                 new DayAnnouncementFeature(),
@@ -48,7 +51,7 @@ public final class RootBoot implements ModInitializer {
                 new HomingExperienceOrbFeature(),
                 new DeathItemProtectionFeature(),
                 new BiomeDiscoveryFeature(),
-                new HeavyfootFeature(),
+                new HeavyfootFeature(cfg.heavyfootRadius()),
                 new LightfootFeature()));
         if (cfg.ensureKeys(registry.featureIds())) {
             cfg.save(configPath());

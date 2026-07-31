@@ -1,6 +1,7 @@
 package br.com.bobwizley.rootboot.feature.specialboots;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import br.com.bobwizley.rootboot.config.RootBootConfig;
@@ -31,7 +32,7 @@ class SpecialBootsTest {
     @Test
     void featuresRegisterIndependentlyByToggle() {
         FeatureRegistry registry = new FeatureRegistry(List.of(
-                new HeavyfootFeature(),
+                new HeavyfootFeature(RootBootConfig.HEAVYFOOT_RADIUS_DEFAULT),
                 new LightfootFeature()));
 
         RootBootConfig config = new RootBootConfig();
@@ -46,8 +47,7 @@ class SpecialBootsTest {
     @Test
     void enchantmentsHaveCorrectStatsAndExclusivity() throws IOException {
         for (String id : List.of("heavyfoot", "lightfoot")) {
-            Path file = DATA.resolve("rootboot/enchantment/" + id + ".json");
-            JsonObject json = GSON.fromJson(Files.readString(file), JsonObject.class);
+            JsonObject json = enchantmentJson(id);
 
             assertEquals(5, json.get("weight").getAsInt());
             assertEquals(1, json.get("max_level").getAsInt());
@@ -62,6 +62,18 @@ class SpecialBootsTest {
             assertEquals("#minecraft:enchantable/foot_armor", json.get("supported_items").getAsString());
             assertEquals("#rootboot:exclusive_set/special_boots", json.get("exclusive_set").getAsString());
         }
+    }
+
+    @Test
+    void heavyfootCarriesItsTickEffectAndLightfootDoesNot() throws IOException {
+        JsonObject heavyfoot = enchantmentJson("heavyfoot");
+        JsonArray tickEffects = heavyfoot.getAsJsonObject("effects").getAsJsonArray("minecraft:tick");
+
+        assertEquals(1, tickEffects.size());
+        assertEquals(
+                "rootboot:heavyfoot",
+                tickEffects.get(0).getAsJsonObject().getAsJsonObject("effect").get("type").getAsString());
+        assertFalse(enchantmentJson("lightfoot").has("effects"));
     }
 
     @Test
@@ -80,8 +92,15 @@ class SpecialBootsTest {
         assertTrue(langJson.has("enchantment.rootboot.lightfoot"));
         assertTrue(langJson.has("option.rootboot.heavyfoot"));
         assertTrue(langJson.has("option.rootboot.heavyfoot.tooltip"));
+        assertTrue(langJson.has("option.rootboot.heavyfoot_radius"));
+        assertTrue(langJson.has("option.rootboot.heavyfoot_radius.tooltip"));
         assertTrue(langJson.has("option.rootboot.lightfoot"));
         assertTrue(langJson.has("option.rootboot.lightfoot.tooltip"));
+    }
+
+    private JsonObject enchantmentJson(String id) throws IOException {
+        Path file = DATA.resolve("rootboot/enchantment/" + id + ".json");
+        return GSON.fromJson(Files.readString(file), JsonObject.class);
     }
 
     private void assertTagContains(String relativePath, String... expectedValues) throws IOException {
