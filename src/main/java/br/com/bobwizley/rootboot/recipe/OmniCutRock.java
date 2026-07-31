@@ -215,55 +215,60 @@ final class OmniCutRock {
                                     "tuff_brick_wall")));
 
     /**
-     * The blocks a pair of slabs rebuilds. The reference's set, so a few blocks that do have a slab are
-     * deliberately missing — purpur among them.
+     * The blocks a pair of slabs rebuilds, each paired with the slab vanilla actually named. The reference's
+     * set, so a few blocks that do have a slab are deliberately missing — purpur among them.
+     *
+     * <p>Spelled out rather than derived from the block name. Vanilla mostly appends {@code _slab} to the
+     * singular, but it does not promise to: {@code quartz_block} has a plain {@code quartz_slab}, and
+     * singularizing an English plural is a rule about the language rather than about the registry. An
+     * explicit pair cannot silently produce an id no version has.
      */
-    private static final List<String> SLAB_BLOCKS =
+    private static final List<Reassembly> REASSEMBLIES =
             List.of(
-                    "andesite",
-                    "blackstone",
-                    "bricks",
-                    "cinnabar",
-                    "cinnabar_bricks",
-                    "cobbled_deepslate",
-                    "cobblestone",
-                    "cut_red_sandstone",
-                    "cut_sandstone",
-                    "dark_prismarine",
-                    "deepslate_bricks",
-                    "deepslate_tiles",
-                    "diorite",
-                    "end_stone_bricks",
-                    "granite",
-                    "mossy_cobblestone",
-                    "mossy_stone_bricks",
-                    "mud_bricks",
-                    "nether_bricks",
-                    "polished_andesite",
-                    "polished_blackstone",
-                    "polished_blackstone_bricks",
-                    "polished_cinnabar",
-                    "polished_deepslate",
-                    "polished_diorite",
-                    "polished_granite",
-                    "polished_sulfur",
-                    "polished_tuff",
-                    "prismarine",
-                    "prismarine_bricks",
-                    "quartz_block",
-                    "red_nether_bricks",
-                    "red_sandstone",
-                    "sandstone",
-                    "smooth_quartz",
-                    "smooth_red_sandstone",
-                    "smooth_sandstone",
-                    "smooth_stone",
-                    "stone",
-                    "stone_bricks",
-                    "sulfur",
-                    "sulfur_bricks",
-                    "tuff",
-                    "tuff_bricks");
+                    new Reassembly("andesite", "andesite_slab"),
+                    new Reassembly("blackstone", "blackstone_slab"),
+                    new Reassembly("bricks", "brick_slab"),
+                    new Reassembly("cinnabar", "cinnabar_slab"),
+                    new Reassembly("cinnabar_bricks", "cinnabar_brick_slab"),
+                    new Reassembly("cobbled_deepslate", "cobbled_deepslate_slab"),
+                    new Reassembly("cobblestone", "cobblestone_slab"),
+                    new Reassembly("cut_red_sandstone", "cut_red_sandstone_slab"),
+                    new Reassembly("cut_sandstone", "cut_sandstone_slab"),
+                    new Reassembly("dark_prismarine", "dark_prismarine_slab"),
+                    new Reassembly("deepslate_bricks", "deepslate_brick_slab"),
+                    new Reassembly("deepslate_tiles", "deepslate_tile_slab"),
+                    new Reassembly("diorite", "diorite_slab"),
+                    new Reassembly("end_stone_bricks", "end_stone_brick_slab"),
+                    new Reassembly("granite", "granite_slab"),
+                    new Reassembly("mossy_cobblestone", "mossy_cobblestone_slab"),
+                    new Reassembly("mossy_stone_bricks", "mossy_stone_brick_slab"),
+                    new Reassembly("mud_bricks", "mud_brick_slab"),
+                    new Reassembly("nether_bricks", "nether_brick_slab"),
+                    new Reassembly("polished_andesite", "polished_andesite_slab"),
+                    new Reassembly("polished_blackstone", "polished_blackstone_slab"),
+                    new Reassembly("polished_blackstone_bricks", "polished_blackstone_brick_slab"),
+                    new Reassembly("polished_cinnabar", "polished_cinnabar_slab"),
+                    new Reassembly("polished_deepslate", "polished_deepslate_slab"),
+                    new Reassembly("polished_diorite", "polished_diorite_slab"),
+                    new Reassembly("polished_granite", "polished_granite_slab"),
+                    new Reassembly("polished_sulfur", "polished_sulfur_slab"),
+                    new Reassembly("polished_tuff", "polished_tuff_slab"),
+                    new Reassembly("prismarine", "prismarine_slab"),
+                    new Reassembly("prismarine_bricks", "prismarine_brick_slab"),
+                    new Reassembly("quartz_block", "quartz_slab"),
+                    new Reassembly("red_nether_bricks", "red_nether_brick_slab"),
+                    new Reassembly("red_sandstone", "red_sandstone_slab"),
+                    new Reassembly("sandstone", "sandstone_slab"),
+                    new Reassembly("smooth_quartz", "smooth_quartz_slab"),
+                    new Reassembly("smooth_red_sandstone", "smooth_red_sandstone_slab"),
+                    new Reassembly("smooth_sandstone", "smooth_sandstone_slab"),
+                    new Reassembly("smooth_stone", "smooth_stone_slab"),
+                    new Reassembly("stone", "stone_slab"),
+                    new Reassembly("stone_bricks", "stone_brick_slab"),
+                    new Reassembly("sulfur", "sulfur_slab"),
+                    new Reassembly("sulfur_bricks", "sulfur_brick_slab"),
+                    new Reassembly("tuff", "tuff_slab"),
+                    new Reassembly("tuff_bricks", "tuff_brick_slab"));
 
     private OmniCutRock() {
     }
@@ -273,8 +278,8 @@ final class OmniCutRock {
         for (Recovery recovery : RECOVERIES) {
             recipes.add(uncut(recovery));
         }
-        for (String block : SLAB_BLOCKS) {
-            recipes.add(unslab(block));
+        for (Reassembly reassembly : REASSEMBLIES) {
+            recipes.add(unslab(reassembly));
         }
         return List.copyOf(recipes);
     }
@@ -290,30 +295,15 @@ final class OmniCutRock {
     }
 
     // Side by side rather than stacked, matching the wood slice and the reference.
-    private static RecipeSpec unslab(String block) {
+    private static RecipeSpec unslab(Reassembly reassembly) {
         return new Shaped(
                 "rootboot",
-                "rock/unslab/" + block,
+                "rock/unslab/" + reassembly.block(),
                 Category.BUILDING_BLOCKS,
                 Optional.empty(),
                 List.of("##"),
-                Map.of('#', Ingredient.item(item(slabOf(block)))),
-                new Result(item(block), 1));
-    }
-
-    /**
-     * A block's slab, which vanilla names after the singular of the block: {@code stone_bricks} has a
-     * {@code stone_brick_slab}, {@code deepslate_tiles} a {@code deepslate_tile_slab}, and
-     * {@code quartz_block} simply a {@code quartz_slab}.
-     */
-    private static String slabOf(String block) {
-        if (block.endsWith("_block")) {
-            return block.substring(0, block.length() - "_block".length()) + "_slab";
-        }
-        if (block.endsWith("s")) {
-            return block.substring(0, block.length() - 1) + "_slab";
-        }
-        return block + "_slab";
+                Map.of('#', Ingredient.item(item(reassembly.slab()))),
+                new Result(item(reassembly.block()), 1));
     }
 
     private static String item(String path) {
@@ -322,4 +312,7 @@ final class OmniCutRock {
 
     /** A recycling conversion: the block that comes back, how many of it, and the products that give it. */
     private record Recovery(String result, int count, List<String> products) {}
+
+    /** A slab pair and the block it rebuilds. */
+    private record Reassembly(String block, String slab) {}
 }

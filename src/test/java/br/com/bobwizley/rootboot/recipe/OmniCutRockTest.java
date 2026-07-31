@@ -9,7 +9,6 @@ import br.com.bobwizley.rootboot.recipe.RecipeSpec.Ingredient;
 import br.com.bobwizley.rootboot.recipe.RecipeSpec.Shaped;
 import br.com.bobwizley.rootboot.recipe.RecipeSpec.Stonecutting;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
@@ -21,56 +20,56 @@ import org.junit.jupiter.api.Test;
 class OmniCutRockTest {
 
     /**
-     * The reference's reassembly set: every block a pair of slabs rebuilds, mapped to the slab id vanilla
-     * actually named. Spelled out rather than derived, so the naming rule the spec applies is checked
-     * against the registry instead of against itself.
+     * The reference's reassembly coverage. Only the blocks: the slab each one reads is spelled out in the
+     * spec and checked against the real registry by {@code VanillaRecipeConflictTest}, so repeating the
+     * pairing here would only assert that one copy of it matches another.
      */
-    private static final Map<String, String> SLABS =
-            Map.ofEntries(
-                    Map.entry("andesite", "andesite_slab"),
-                    Map.entry("blackstone", "blackstone_slab"),
-                    Map.entry("bricks", "brick_slab"),
-                    Map.entry("cinnabar", "cinnabar_slab"),
-                    Map.entry("cinnabar_bricks", "cinnabar_brick_slab"),
-                    Map.entry("cobbled_deepslate", "cobbled_deepslate_slab"),
-                    Map.entry("cobblestone", "cobblestone_slab"),
-                    Map.entry("cut_red_sandstone", "cut_red_sandstone_slab"),
-                    Map.entry("cut_sandstone", "cut_sandstone_slab"),
-                    Map.entry("dark_prismarine", "dark_prismarine_slab"),
-                    Map.entry("deepslate_bricks", "deepslate_brick_slab"),
-                    Map.entry("deepslate_tiles", "deepslate_tile_slab"),
-                    Map.entry("diorite", "diorite_slab"),
-                    Map.entry("end_stone_bricks", "end_stone_brick_slab"),
-                    Map.entry("granite", "granite_slab"),
-                    Map.entry("mossy_cobblestone", "mossy_cobblestone_slab"),
-                    Map.entry("mossy_stone_bricks", "mossy_stone_brick_slab"),
-                    Map.entry("mud_bricks", "mud_brick_slab"),
-                    Map.entry("nether_bricks", "nether_brick_slab"),
-                    Map.entry("polished_andesite", "polished_andesite_slab"),
-                    Map.entry("polished_blackstone", "polished_blackstone_slab"),
-                    Map.entry("polished_blackstone_bricks", "polished_blackstone_brick_slab"),
-                    Map.entry("polished_cinnabar", "polished_cinnabar_slab"),
-                    Map.entry("polished_deepslate", "polished_deepslate_slab"),
-                    Map.entry("polished_diorite", "polished_diorite_slab"),
-                    Map.entry("polished_granite", "polished_granite_slab"),
-                    Map.entry("polished_sulfur", "polished_sulfur_slab"),
-                    Map.entry("polished_tuff", "polished_tuff_slab"),
-                    Map.entry("prismarine", "prismarine_slab"),
-                    Map.entry("prismarine_bricks", "prismarine_brick_slab"),
-                    Map.entry("quartz_block", "quartz_slab"),
-                    Map.entry("red_nether_bricks", "red_nether_brick_slab"),
-                    Map.entry("red_sandstone", "red_sandstone_slab"),
-                    Map.entry("sandstone", "sandstone_slab"),
-                    Map.entry("smooth_quartz", "smooth_quartz_slab"),
-                    Map.entry("smooth_red_sandstone", "smooth_red_sandstone_slab"),
-                    Map.entry("smooth_sandstone", "smooth_sandstone_slab"),
-                    Map.entry("smooth_stone", "smooth_stone_slab"),
-                    Map.entry("stone", "stone_slab"),
-                    Map.entry("stone_bricks", "stone_brick_slab"),
-                    Map.entry("sulfur", "sulfur_slab"),
-                    Map.entry("sulfur_bricks", "sulfur_brick_slab"),
-                    Map.entry("tuff", "tuff_slab"),
-                    Map.entry("tuff_bricks", "tuff_brick_slab"));
+    private static final List<String> REASSEMBLED_BLOCKS =
+            List.of(
+                    "andesite",
+                    "blackstone",
+                    "bricks",
+                    "cinnabar",
+                    "cinnabar_bricks",
+                    "cobbled_deepslate",
+                    "cobblestone",
+                    "cut_red_sandstone",
+                    "cut_sandstone",
+                    "dark_prismarine",
+                    "deepslate_bricks",
+                    "deepslate_tiles",
+                    "diorite",
+                    "end_stone_bricks",
+                    "granite",
+                    "mossy_cobblestone",
+                    "mossy_stone_bricks",
+                    "mud_bricks",
+                    "nether_bricks",
+                    "polished_andesite",
+                    "polished_blackstone",
+                    "polished_blackstone_bricks",
+                    "polished_cinnabar",
+                    "polished_deepslate",
+                    "polished_diorite",
+                    "polished_granite",
+                    "polished_sulfur",
+                    "polished_tuff",
+                    "prismarine",
+                    "prismarine_bricks",
+                    "quartz_block",
+                    "red_nether_bricks",
+                    "red_sandstone",
+                    "sandstone",
+                    "smooth_quartz",
+                    "smooth_red_sandstone",
+                    "smooth_sandstone",
+                    "smooth_stone",
+                    "stone",
+                    "stone_bricks",
+                    "sulfur",
+                    "sulfur_bricks",
+                    "tuff",
+                    "tuff_bricks");
 
     private RecipeSpec byPath(String path) {
         return OmniCutRock.all().stream()
@@ -191,7 +190,7 @@ class OmniCutRockTest {
                         .toList();
 
         assertEquals(
-                SLABS.keySet(),
+                Set.copyOf(REASSEMBLED_BLOCKS),
                 reassemblies.stream()
                         .map(recipe -> recipe.path().substring("rock/unslab/".length()))
                         .collect(Collectors.toSet()),
@@ -201,10 +200,9 @@ class OmniCutRockTest {
             assertEquals(List.of("##"), recipe.pattern(), "side by side, never stacked");
             assertEquals("minecraft:" + block, recipe.result().item());
             assertEquals(1, recipe.result().count());
-            assertEquals(
-                    Ingredient.item("minecraft:" + SLABS.get(block)),
-                    recipe.key().get('#'),
-                    block + " slab");
+
+            Ingredient slab = recipe.key().get('#');
+            assertTrue(slab.id().endsWith("_slab"), () -> block + " is rebuilt from " + slab.id());
         }
     }
 

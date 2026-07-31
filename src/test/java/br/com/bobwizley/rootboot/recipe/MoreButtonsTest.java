@@ -174,15 +174,19 @@ class MoreButtonsTest {
     }
 
     // Four buttons from a planks block and six from a stone one only stay generous while the trip is
-    // one-way: any recipe turning a button back into its block would multiply material without limit.
+    // one-way: any recipe turning one of these buttons back into its material would multiply it without
+    // limit. Scoped to the buttons this feature actually inflates — a recipe that merely consumes some
+    // other button is not the problem.
     @Test
     void noRootBootRecipeTurnsAGenerouslyCraftedButtonBackIntoItsMaterial() {
+        Set<String> generous =
+                MoreButtons.all().stream().map(spec -> spec.result().item()).collect(Collectors.toSet());
+
         for (RecipeSpec spec : RootBootRecipes.all()) {
-            List<String> buttons =
-                    inputs(spec).stream().filter(input -> input.endsWith("_button")).toList();
+            List<String> recovered = inputs(spec).stream().filter(generous::contains).toList();
 
             assertEquals(
-                    List.of(), buttons, () -> id(spec) + " consumes buttons More-Buttons makes generously");
+                    List.of(), recovered, () -> id(spec) + " consumes buttons More-Buttons makes generously");
         }
     }
 
