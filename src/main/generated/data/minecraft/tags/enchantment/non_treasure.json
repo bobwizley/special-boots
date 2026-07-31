@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "rootboot:heavyfoot",
+      "required": false
+    },
+    {
+      "id": "rootboot:lightfoot",
+      "required": false
+    }
+  ]
+}

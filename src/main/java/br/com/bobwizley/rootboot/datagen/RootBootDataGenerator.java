@@ -12,5 +12,7 @@ public final class RootBootDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(
                 (output, registries) ->
                         new BetterTreesConfiguredFeatureProvider(output, registries));
+        pack.addProvider(RootBootEnchantmentProvider::new);
+        pack.addProvider(RootBootEnchantmentTagProvider::new);
     }
 }

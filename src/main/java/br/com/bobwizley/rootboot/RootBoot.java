@@ -9,6 +9,8 @@ import br.com.bobwizley.rootboot.feature.homingexperienceorb.HomingExperienceOrb
 import br.com.bobwizley.rootboot.feature.levelmilestone.LevelMilestoneFeature;
 import br.com.bobwizley.rootboot.feature.timeoffset.TimeOffsetFeature;
 import br.com.bobwizley.rootboot.feature.timeoffset.TimeOffsetWorldInitializer;
+import br.com.bobwizley.rootboot.feature.heavyfoot.HeavyfootFeature;
+import br.com.bobwizley.rootboot.feature.lightfoot.LightfootFeature;
 import java.nio.file.Path;
 import java.util.List;
 import net.fabricmc.api.ModInitializer;
@@ -45,7 +47,9 @@ public final class RootBoot implements ModInitializer {
                 new LevelMilestoneFeature(),
                 new HomingExperienceOrbFeature(),
                 new DeathItemProtectionFeature(),
-                new BiomeDiscoveryFeature()));
+                new BiomeDiscoveryFeature(),
+                new HeavyfootFeature(),
+                new LightfootFeature()));
         if (cfg.ensureKeys(registry.featureIds())) {
             cfg.save(configPath());
         }
