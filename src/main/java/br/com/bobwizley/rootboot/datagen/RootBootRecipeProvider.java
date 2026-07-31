@@ -99,7 +99,12 @@ public final class RootBootRecipeProvider extends FabricRecipeProvider {
                                         spec.cookingTime());
                     };
             spec.group().ifPresent(builder::group);
-            builder.unlockedBy("has_ingredient", has(item(spec.inputs().getFirst())));
+            // One criterion per input, the way vanilla does it: the recipe book unlocks on an OR of the
+            // criteria, so a single one would hide the recipe from a player who owns any other eligible
+            // piece of gear.
+            for (String input : spec.inputs()) {
+                builder.unlockedBy("has_" + identifier(input).getPath(), has(item(input)));
+            }
             builder.save(output, recipeKey(spec));
         }
 

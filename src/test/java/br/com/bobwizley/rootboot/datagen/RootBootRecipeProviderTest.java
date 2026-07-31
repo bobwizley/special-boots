@@ -9,6 +9,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.minecraft.SharedConstants;
@@ -60,14 +62,42 @@ class RootBootRecipeProviderTest {
         }
     }
 
+    // A cooking recipe accepts a whole family of gear, and the recipe book unlocks on an OR of the
+    // advancement criteria: one criterion per eligible item is what makes owning any of them enough.
+    @Test
+    void everyEligibleItemUnlocksItsCookingRecipe() {
+        CapturingOutput output = new CapturingOutput();
+        new RootBootRecipeProvider.Recipes(registries, output).buildRecipes();
+
+        for (RecipeSpec spec : RootBootRecipes.all()) {
+            if (!(spec instanceof RecipeSpec.Cooking cooking)) {
+                continue;
+            }
+            String id = spec.namespace() + ":" + spec.path();
+            Advancement advancement = output.advancements.get(id).value();
+
+            Set<String> expected = new LinkedHashSet<>();
+            expected.add("has_the_recipe");
+            cooking.inputs().forEach(input -> expected.add("has_" + input.split(":")[1]));
+            assertEquals(expected, advancement.criteria().keySet(), () -> "unlock criteria of " + id);
+
+            assertEquals(
+                    List.of(List.copyOf(expected)),
+                    advancement.requirements().requirements(),
+                    () -> "any single eligible item must unlock " + id);
+        }
+    }
+
     private static final class CapturingOutput implements RecipeOutput {
 
         private final Map<String, Recipe<?>> recipes = new LinkedHashMap<>();
+        private final Map<String, AdvancementHolder> advancements = new LinkedHashMap<>();
 
         @Override
         public void accept(
                 ResourceKey<Recipe<?>> id, Recipe<?> recipe, AdvancementHolder advancement) {
             recipes.put(id.identifier().toString(), recipe);
+            advancements.put(id.identifier().toString(), advancement);
         }
 
         @Override
