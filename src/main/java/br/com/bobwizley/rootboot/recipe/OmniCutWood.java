@@ -78,18 +78,23 @@ final class OmniCutWood {
      * Recycling, in the reference's calibrated quantities. A product never gives back a log — the coarsest
      * form it recovers is planks — and fences only give back sticks, which is what stops sticks from being
      * reformed into planks.
+     *
+     * <p>Buttons are the one product the reference recycles and this slice does not. More-Buttons crafts
+     * four of them from a single planks block, so recovering a whole planks from one button would turn the
+     * pair of recipes into a material multiplier. The reference has no such conflict: it cuts buttons one
+     * for one.
      */
     private static final List<Recovery> RECOVERIES =
             List.of(
-                    new Recovery("planks", 1, List.of("stairs", "button")),
+                    new Recovery("planks", 1, List.of("stairs")),
                     new Recovery("planks", 2, TWO_PLANK_PRODUCTS),
                     new Recovery("planks", 4, List.of(BOAT)),
-                    new Recovery("stairs", 1, List.of("planks", "button")),
+                    new Recovery("stairs", 1, List.of("planks")),
                     new Recovery("stairs", 2, TWO_PLANK_PRODUCTS),
-                    new Recovery("slab", 2, List.of("stairs", "planks", "button")),
+                    new Recovery("slab", 2, List.of("stairs", "planks")),
                     new Recovery("slab", 4, TWO_PLANK_PRODUCTS),
                     new Recovery(STICK, 1, List.of("slab")),
-                    new Recovery(STICK, 2, List.of("stairs", "planks", "button")),
+                    new Recovery(STICK, 2, List.of("stairs", "planks")),
                     new Recovery(STICK, 3, List.of("fence")),
                     new Recovery(STICK, 4, TWO_PLANK_PRODUCTS),
                     new Recovery(STICK, 8, List.of("fence_gate")));

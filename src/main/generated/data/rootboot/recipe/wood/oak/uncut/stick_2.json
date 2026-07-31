@@ -2,8 +2,7 @@
   "type": "minecraft:stonecutting",
   "ingredient": [
     "minecraft:oak_stairs",
-    "minecraft:oak_planks",
-    "minecraft:oak_button"
+    "minecraft:oak_planks"
   ],
   "result": {
     "count": 2,

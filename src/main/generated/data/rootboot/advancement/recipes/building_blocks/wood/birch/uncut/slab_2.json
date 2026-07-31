@@ -1,16 +1,6 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_birch_button": {
-      "conditions": {
-        "items": [
-          {
-            "items": "minecraft:birch_button"
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
     "has_birch_planks": {
       "conditions": {
         "items": [
@@ -42,8 +32,7 @@
     [
       "has_the_recipe",
       "has_birch_stairs",
-      "has_birch_planks",
-      "has_birch_button"
+      "has_birch_planks"
     ]
   ],
   "rewards": {

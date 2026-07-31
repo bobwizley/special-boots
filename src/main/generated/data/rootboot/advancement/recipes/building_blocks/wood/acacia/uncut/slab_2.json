@@ -1,16 +1,6 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_acacia_button": {
-      "conditions": {
-        "items": [
-          {
-            "items": "minecraft:acacia_button"
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
     "has_acacia_planks": {
       "conditions": {
         "items": [
@@ -42,8 +32,7 @@
     [
       "has_the_recipe",
       "has_acacia_stairs",
-      "has_acacia_planks",
-      "has_acacia_button"
+      "has_acacia_planks"
     ]
   ],
   "rewards": {

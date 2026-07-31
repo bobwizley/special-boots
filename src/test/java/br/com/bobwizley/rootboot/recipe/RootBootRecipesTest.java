@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import br.com.bobwizley.rootboot.recipe.RecipeSpec.Ingredient;
 import br.com.bobwizley.rootboot.recipe.RecipeSpec.Shaped;
 import br.com.bobwizley.rootboot.recipe.RecipeSpec.Shapeless;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,6 +38,20 @@ class RootBootRecipesTest {
                         "rootboot:bell",
                         "rootboot:wool_to_string"),
                 ids);
+    }
+
+    // Two specs sharing an id would silently collapse into one file, so the loss is invisible downstream.
+    @Test
+    void noTwoRecipesInTheWholeSetShareAnId() {
+        List<String> ids =
+                RootBootRecipes.all().stream()
+                        .map(spec -> spec.namespace() + ":" + spec.path())
+                        .collect(Collectors.toList());
+
+        List<String> duplicated =
+                ids.stream().distinct().filter(id -> Collections.frequency(ids, id) > 1).toList();
+
+        assertEquals(List.of(), duplicated, "every recipe must own its id");
     }
 
     @Test

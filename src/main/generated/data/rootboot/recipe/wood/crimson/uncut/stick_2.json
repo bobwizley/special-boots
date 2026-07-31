@@ -2,8 +2,7 @@
   "type": "minecraft:stonecutting",
   "ingredient": [
     "minecraft:crimson_stairs",
-    "minecraft:crimson_planks",
-    "minecraft:crimson_button"
+    "minecraft:crimson_planks"
   ],
   "result": {
     "count": 2,

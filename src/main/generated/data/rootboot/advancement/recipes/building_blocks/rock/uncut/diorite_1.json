@@ -1,0 +1,65 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_diorite_stairs": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:diorite_stairs"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_diorite_wall": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:diorite_wall"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_polished_diorite": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:polished_diorite"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_polished_diorite_stairs": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:polished_diorite_stairs"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "rootboot:rock/uncut/diorite_1"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_polished_diorite",
+      "has_diorite_stairs",
+      "has_polished_diorite_stairs",
+      "has_diorite_wall"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "rootboot:rock/uncut/diorite_1"
+    ]
+  }
+}

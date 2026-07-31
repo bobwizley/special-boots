@@ -2,8 +2,7 @@
   "type": "minecraft:stonecutting",
   "ingredient": [
     "minecraft:spruce_stairs",
-    "minecraft:spruce_planks",
-    "minecraft:spruce_button"
+    "minecraft:spruce_planks"
   ],
   "result": {
     "count": 2,

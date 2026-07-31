@@ -2,8 +2,7 @@
   "type": "minecraft:stonecutting",
   "ingredient": [
     "minecraft:birch_stairs",
-    "minecraft:birch_planks",
-    "minecraft:birch_button"
+    "minecraft:birch_planks"
   ],
   "result": {
     "count": 2,

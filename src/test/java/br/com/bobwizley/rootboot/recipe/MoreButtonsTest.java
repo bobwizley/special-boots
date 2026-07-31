@@ -173,6 +173,30 @@ class MoreButtonsTest {
         }
     }
 
+    // Four buttons from a planks block and six from a stone one only stay generous while the trip is
+    // one-way: any recipe turning a button back into its block would multiply material without limit.
+    @Test
+    void noRootBootRecipeTurnsAGenerouslyCraftedButtonBackIntoItsMaterial() {
+        for (RecipeSpec spec : RootBootRecipes.all()) {
+            List<String> buttons =
+                    inputs(spec).stream().filter(input -> input.endsWith("_button")).toList();
+
+            assertEquals(
+                    List.of(), buttons, () -> id(spec) + " consumes buttons More-Buttons makes generously");
+        }
+    }
+
+    private static List<String> inputs(RecipeSpec spec) {
+        return switch (spec) {
+            case RecipeSpec.Cooking cooking -> cooking.inputs();
+            case RecipeSpec.Shaped shaped -> shaped.key().values().stream().map(Ingredient::id).toList();
+            case RecipeSpec.Shapeless shapeless ->
+                    shapeless.ingredients().stream().map(Ingredient::id).toList();
+            case Stonecutting stonecutting ->
+                    stonecutting.ingredients().stream().map(Ingredient::id).toList();
+        };
+    }
+
     private static String id(RecipeSpec spec) {
         return spec.namespace() + ":" + spec.path();
     }

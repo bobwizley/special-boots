@@ -1,9 +1,6 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": [
-    "minecraft:birch_stairs",
-    "minecraft:birch_button"
-  ],
+  "ingredient": "minecraft:birch_stairs",
   "result": {
     "id": "minecraft:birch_planks"
   }

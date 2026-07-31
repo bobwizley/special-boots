@@ -1,16 +1,6 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_crimson_button": {
-      "conditions": {
-        "items": [
-          {
-            "items": "minecraft:crimson_button"
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
     "has_crimson_planks": {
       "conditions": {
         "items": [
@@ -31,8 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_crimson_planks",
-      "has_crimson_button"
+      "has_crimson_planks"
     ]
   ],
   "rewards": {

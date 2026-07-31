@@ -2,8 +2,7 @@
   "type": "minecraft:stonecutting",
   "ingredient": [
     "minecraft:mangrove_stairs",
-    "minecraft:mangrove_planks",
-    "minecraft:mangrove_button"
+    "minecraft:mangrove_planks"
   ],
   "result": {
     "count": 2,

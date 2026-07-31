@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": [
+    "minecraft:brick_stairs",
+    "minecraft:brick_wall"
+  ],
+  "result": {
+    "id": "minecraft:bricks"
+  }
+}

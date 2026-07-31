@@ -62,15 +62,15 @@ class OmniCutWoodTest {
 
     private static Map<String, List<String>> recoveryInputs() {
         Map<String, List<String>> inputs = new LinkedHashMap<>();
-        inputs.put("planks_1", List.of("stairs", "button"));
+        inputs.put("planks_1", List.of("stairs"));
         inputs.put("planks_2", TWO_PLANK_PRODUCTS);
         inputs.put("planks_4", List.of("boat"));
-        inputs.put("stairs_1", List.of("planks", "button"));
+        inputs.put("stairs_1", List.of("planks"));
         inputs.put("stairs_2", TWO_PLANK_PRODUCTS);
-        inputs.put("slab_2", List.of("stairs", "planks", "button"));
+        inputs.put("slab_2", List.of("stairs", "planks"));
         inputs.put("slab_4", TWO_PLANK_PRODUCTS);
         inputs.put("stick_1", List.of("slab"));
-        inputs.put("stick_2", List.of("stairs", "planks", "button"));
+        inputs.put("stick_2", List.of("stairs", "planks"));
         inputs.put("stick_3", List.of("fence"));
         inputs.put("stick_4", TWO_PLANK_PRODUCTS);
         inputs.put("stick_8", List.of("fence_gate"));

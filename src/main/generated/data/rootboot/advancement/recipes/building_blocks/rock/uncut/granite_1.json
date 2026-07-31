@@ -1,0 +1,65 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_granite_stairs": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:granite_stairs"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_granite_wall": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:granite_wall"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_polished_granite": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:polished_granite"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_polished_granite_stairs": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:polished_granite_stairs"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "rootboot:rock/uncut/granite_1"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_polished_granite",
+      "has_granite_stairs",
+      "has_polished_granite_stairs",
+      "has_granite_wall"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "rootboot:rock/uncut/granite_1"
+    ]
+  }
+}
