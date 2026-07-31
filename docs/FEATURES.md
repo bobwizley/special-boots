@@ -122,9 +122,8 @@ Dois encantamentos de bota (single-level, slot feet, `supported_items: #minecraf
 
 - ✅ **Heavyfoot** — `EnchantmentEntityEffect` custom em `minecraft:tick`: num raio ao redor do player, converte grass/dirt/coarse_dirt/podzol/mycelium/rooted_dirt → `dirt_path` (abaixo) e destrói flores (`#minecraft:flowers`)/short_grass/tall_grass/fern/large_fern/dead_bush/sweet_berry_bush (pés e cabeça).
   - **Raio default = 1**; range **0–2** na config. Preserva literalmente a geometria da referência: 0 afeta uma área 1×1, 1 afeta 3×3 e 2 afeta 5×5.
-- ✅ **Lightfoot** — mixin `@Redirect` em `FarmBlock.fallOn`→`turnToDirt`: impede pisoteio de farmland se a bota tiver o encantamento.
+- ✅ **Lightfoot** — mixin `@Redirect` em `FarmlandBlock.fallOn`→`turnToDirt`: impede pisoteio de farmland se a bota tiver o encantamento. Na 26.2 a classe é `FarmlandBlock`, e `fallOn` chama `turnToDirt` uma única vez antes de delegar ao `super.fallOn`, então o redirect suspende apenas a conversão e preserva o restante da queda.
 - **Obtenção (opção A):** survival via **mesa de encantar + bigorna** — adicionar às tags `#minecraft:in_enchanting_table` e `non_treasure`. Sem trades, sem loot/treasure.
-- ⚠️ **Verificar na implementação:** API de enchantment/`FarmBlock`/`Identifier` na 26.2 (ref é 1.21.11, muito próximo).
 
 ---
 

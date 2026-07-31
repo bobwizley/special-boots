@@ -2,6 +2,9 @@ package br.com.bobwizley.rootboot.feature.lightfoot;
 
 import br.com.bobwizley.rootboot.feature.Feature;
 
+/**
+ * Lightfoot: boots that keep farmland from being trampled into dirt by the wearer's fall.
+ */
 public final class LightfootFeature implements Feature {
     public static final String ID = "lightfoot";
 
@@ -12,6 +15,6 @@ public final class LightfootFeature implements Feature {
 
     @Override
     public void register() {
-        // Effects to be implemented in a future ticket
+        Lightfoot.enable();
     }
 }
