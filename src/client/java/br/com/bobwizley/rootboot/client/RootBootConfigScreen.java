@@ -5,8 +5,10 @@ import br.com.bobwizley.rootboot.config.RootBootConfig;
 import br.com.bobwizley.rootboot.feature.biomediscovery.BiomeDiscoveryFeature;
 import br.com.bobwizley.rootboot.feature.dayannouncement.DayAnnouncementFeature;
 import br.com.bobwizley.rootboot.feature.deathitemprotection.DeathItemProtectionFeature;
+import br.com.bobwizley.rootboot.feature.heavyfoot.HeavyfootFeature;
 import br.com.bobwizley.rootboot.feature.homingexperienceorb.HomingExperienceOrbFeature;
 import br.com.bobwizley.rootboot.feature.levelmilestone.LevelMilestoneFeature;
+import br.com.bobwizley.rootboot.feature.lightfoot.LightfootFeature;
 import br.com.bobwizley.rootboot.feature.timeoffset.TimeOffsetFeature;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
@@ -81,6 +83,22 @@ public final class RootBootConfigScreen {
                 .setDefaultValue(true)
                 .setTooltip(Component.translatable("option.rootboot.biome_discovery.tooltip"))
                 .setSaveConsumer(value -> config.setEnabled(BiomeDiscoveryFeature.ID, value))
+                .build());
+
+        general.addEntry(entries.startBooleanToggle(
+                        Component.translatable("option.rootboot.heavyfoot"),
+                        config.isEnabled(HeavyfootFeature.ID))
+                .setDefaultValue(true)
+                .setTooltip(Component.translatable("option.rootboot.heavyfoot.tooltip"))
+                .setSaveConsumer(value -> config.setEnabled(HeavyfootFeature.ID, value))
+                .build());
+
+        general.addEntry(entries.startBooleanToggle(
+                        Component.translatable("option.rootboot.lightfoot"),
+                        config.isEnabled(LightfootFeature.ID))
+                .setDefaultValue(true)
+                .setTooltip(Component.translatable("option.rootboot.lightfoot.tooltip"))
+                .setSaveConsumer(value -> config.setEnabled(LightfootFeature.ID, value))
                 .build());
 
         return builder.build();

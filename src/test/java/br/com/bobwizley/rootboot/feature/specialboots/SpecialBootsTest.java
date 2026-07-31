@@ -3,7 +3,8 @@ package br.com.bobwizley.rootboot.feature.specialboots;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import br.com.bobwizley.rootboot.RootBoot;
+import br.com.bobwizley.rootboot.config.RootBootConfig;
+import br.com.bobwizley.rootboot.feature.FeatureRegistry;
 import br.com.bobwizley.rootboot.feature.heavyfoot.HeavyfootFeature;
 import br.com.bobwizley.rootboot.feature.lightfoot.LightfootFeature;
 import com.google.gson.Gson;
@@ -25,6 +26,21 @@ class SpecialBootsTest {
     void featuresHaveCorrectIds() {
         assertEquals("heavyfoot", HeavyfootFeature.ID);
         assertEquals("lightfoot", LightfootFeature.ID);
+    }
+
+    @Test
+    void featuresRegisterIndependentlyByToggle() {
+        FeatureRegistry registry = new FeatureRegistry(List.of(
+                new HeavyfootFeature(),
+                new LightfootFeature()));
+
+        RootBootConfig config = new RootBootConfig();
+        config.setEnabled(HeavyfootFeature.ID, false);
+        assertEquals(List.of(LightfootFeature.ID), registry.registerEnabled(config));
+
+        config.setEnabled(HeavyfootFeature.ID, true);
+        config.setEnabled(LightfootFeature.ID, false);
+        assertEquals(List.of(HeavyfootFeature.ID), registry.registerEnabled(config));
     }
 
     @Test
@@ -53,6 +69,19 @@ class SpecialBootsTest {
         assertTagContains("minecraft/tags/enchantment/in_enchanting_table.json", "rootboot:heavyfoot", "rootboot:lightfoot");
         assertTagContains("minecraft/tags/enchantment/non_treasure.json", "rootboot:heavyfoot", "rootboot:lightfoot");
         assertTagContains("rootboot/tags/enchantment/exclusive_set/special_boots.json", "rootboot:heavyfoot", "rootboot:lightfoot");
+    }
+
+    @Test
+    void enchantmentsAndOptionsHaveTranslations() throws IOException {
+        Path langFile = Path.of("src", "main", "resources", "assets", "rootboot", "lang", "en_us.json");
+        JsonObject langJson = GSON.fromJson(Files.readString(langFile), JsonObject.class);
+
+        assertTrue(langJson.has("enchantment.rootboot.heavyfoot"));
+        assertTrue(langJson.has("enchantment.rootboot.lightfoot"));
+        assertTrue(langJson.has("option.rootboot.heavyfoot"));
+        assertTrue(langJson.has("option.rootboot.heavyfoot.tooltip"));
+        assertTrue(langJson.has("option.rootboot.lightfoot"));
+        assertTrue(langJson.has("option.rootboot.lightfoot.tooltip"));
     }
 
     private void assertTagContains(String relativePath, String... expectedValues) throws IOException {
