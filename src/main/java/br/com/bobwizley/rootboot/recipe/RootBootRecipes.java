@@ -20,7 +20,9 @@ public final class RootBootRecipes {
     }
 
     public static List<RecipeSpec> all() {
-        return Stream.of(simple(), MoreButtons.all(), Recycling.all()).flatMap(List::stream).toList();
+        return Stream.of(simple(), MoreButtons.all(), Recycling.all(), OmniCutWood.all())
+                .flatMap(List::stream)
+                .toList();
     }
 
     /**

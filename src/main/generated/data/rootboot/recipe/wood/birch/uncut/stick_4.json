@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": [
+    "minecraft:birch_pressure_plate",
+    "minecraft:birch_sign",
+    "minecraft:birch_door",
+    "minecraft:birch_trapdoor"
+  ],
+  "result": {
+    "count": 4,
+    "id": "minecraft:stick"
+  }
+}

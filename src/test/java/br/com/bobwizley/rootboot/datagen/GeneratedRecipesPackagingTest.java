@@ -10,6 +10,8 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
+import java.util.Comparator;
 import java.util.Set;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
@@ -43,8 +45,11 @@ class GeneratedRecipesPackagingTest {
 
         try (Stream<Path> walk = Files.walk(DATA)) {
             Set<String> generated =
-                    walk.filter(p -> p.getParent().getFileName().toString().equals("recipe"))
+                    walk.filter(Files::isRegularFile)
                             .map(p -> DATA.relativize(p).toString().replace('\\', '/'))
+                            // A recipe id may nest, so the marker is the recipe directory of a namespace
+                            // rather than the file's immediate parent.
+                            .filter(p -> p.matches("[^/]+/recipe/.+\\.json"))
                             .collect(Collectors.toSet());
             assertTrue(
                     generated.equals(expected),
@@ -75,9 +80,19 @@ class GeneratedRecipesPackagingTest {
             return null;
         }
         try (Stream<Path> jars = Files.list(libs)) {
+            // The newest one: a version bump leaves the JARs of earlier versions behind, and checking a
+            // stale JAR would fail on recipes that simply did not exist when it was built.
             return jars.filter(p -> p.getFileName().toString().matches("rootboot-.*(?<!-sources)\\.jar"))
-                    .findFirst()
+                    .max(Comparator.comparing(GeneratedRecipesPackagingTest::lastModified))
                     .orElse(null);
+        }
+    }
+
+    private static FileTime lastModified(Path file) {
+        try {
+            return Files.getLastModifiedTime(file);
+        } catch (IOException e) {
+            throw new AssertionError("could not read the timestamp of " + file, e);
         }
     }
 

@@ -113,7 +113,7 @@ class MoreButtonsTest {
                             byId("rootboot", stone + "_button_from_" + stone + "_stonecutting"),
                             stone + " stonecutting");
 
-            assertEquals(Ingredient.item("minecraft:" + stone), recipe.ingredient());
+            assertEquals(List.of(Ingredient.item("minecraft:" + stone)), recipe.ingredients());
             assertEquals("minecraft:" + stone + "_button", recipe.result().item());
             assertEquals(6, recipe.result().count(), stone + " must yield six buttons");
         }

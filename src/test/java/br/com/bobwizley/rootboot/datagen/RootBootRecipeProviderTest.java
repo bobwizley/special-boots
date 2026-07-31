@@ -88,6 +88,34 @@ class RootBootRecipeProviderTest {
         }
     }
 
+    // Same reasoning for the stonecutter: a wood cutting recipe accepts four forms of a log, so owning any
+    // one of them has to be enough to unlock it.
+    @Test
+    void everyAcceptedInputUnlocksItsStonecuttingRecipe() {
+        CapturingOutput output = new CapturingOutput();
+        new RootBootRecipeProvider.Recipes(registries, output).buildRecipes();
+
+        for (RecipeSpec spec : RootBootRecipes.all()) {
+            if (!(spec instanceof RecipeSpec.Stonecutting stonecutting)) {
+                continue;
+            }
+            String id = spec.namespace() + ":" + spec.path();
+            Advancement advancement = output.advancements.get(id).value();
+
+            Set<String> expected = new LinkedHashSet<>();
+            expected.add("has_the_recipe");
+            stonecutting
+                    .ingredients()
+                    .forEach(ingredient -> expected.add("has_" + ingredient.id().split(":")[1]));
+            assertEquals(expected, advancement.criteria().keySet(), () -> "unlock criteria of " + id);
+
+            assertEquals(
+                    List.of(List.copyOf(expected)),
+                    advancement.requirements().requirements(),
+                    () -> "any single accepted input must unlock " + id);
+        }
+    }
+
     private static final class CapturingOutput implements RecipeOutput {
 
         private final Map<String, Recipe<?>> recipes = new LinkedHashMap<>();

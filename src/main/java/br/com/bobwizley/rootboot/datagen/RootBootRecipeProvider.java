@@ -2,6 +2,7 @@ package br.com.bobwizley.rootboot.datagen;
 
 import br.com.bobwizley.rootboot.recipe.RecipeSpec;
 import br.com.bobwizley.rootboot.recipe.RootBootRecipes;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
@@ -146,19 +147,29 @@ public final class RootBootRecipeProvider extends FabricRecipeProvider {
         private void emitStonecutting(RecipeSpec.Stonecutting spec) {
             SingleItemRecipeBuilder builder =
                     SingleItemRecipeBuilder.stonecutting(
-                            ingredient(spec.ingredient()),
+                            ingredient(spec.ingredients()),
                             category(spec.category()),
                             item(spec.result().item()),
                             spec.result().count());
             spec.group().ifPresent(builder::group);
-            builder.unlockedBy("has_ingredient", criterion(spec.ingredient()));
+            // One criterion per accepted input, the way the cooking recipes do it: the recipe book unlocks on
+            // an OR of the criteria, so naming only the first input would hide the recipe from a player who
+            // owns one of the others.
+            for (RecipeSpec.Ingredient ingredient : spec.ingredients()) {
+                builder.unlockedBy("has_" + identifier(ingredient.id()).getPath(), criterion(ingredient));
+            }
             builder.save(output, recipeKey(spec));
         }
 
-        private Ingredient ingredient(RecipeSpec.Ingredient ingredient) {
-            return ingredient.isTag()
-                    ? Ingredient.of(items.getOrThrow(itemTag(ingredient.id())))
-                    : Ingredient.of(item(ingredient.id()));
+        private Ingredient ingredient(List<RecipeSpec.Ingredient> ingredients) {
+            if (ingredients.size() == 1) {
+                RecipeSpec.Ingredient only = ingredients.getFirst();
+                return only.isTag()
+                        ? Ingredient.of(items.getOrThrow(itemTag(only.id())))
+                        : Ingredient.of(item(only.id()));
+            }
+            // A set of equivalent inputs is spelled out item by item; a tag would be a different recipe shape.
+            return Ingredient.of(ingredients.stream().map(entry -> item(entry.id())).toArray(Item[]::new));
         }
 
         private Criterion<?> criterion(RecipeSpec.Ingredient ingredient) {
@@ -198,9 +209,11 @@ public final class RootBootRecipeProvider extends FabricRecipeProvider {
 
         private static RecipeCategory category(RecipeSpec.Category category) {
             return switch (category) {
+                case BUILDING_BLOCKS -> RecipeCategory.BUILDING_BLOCKS;
                 case TOOLS -> RecipeCategory.TOOLS;
                 case DECORATIONS -> RecipeCategory.DECORATIONS;
                 case REDSTONE -> RecipeCategory.REDSTONE;
+                case TRANSPORTATION -> RecipeCategory.TRANSPORTATION;
                 case MISC -> RecipeCategory.MISC;
             };
         }

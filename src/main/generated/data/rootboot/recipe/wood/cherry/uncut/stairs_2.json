@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": [
+    "minecraft:cherry_pressure_plate",
+    "minecraft:cherry_sign",
+    "minecraft:cherry_door",
+    "minecraft:cherry_trapdoor"
+  ],
+  "result": {
+    "count": 2,
+    "id": "minecraft:cherry_stairs"
+  }
+}

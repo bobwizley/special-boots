@@ -93,7 +93,17 @@ final class RecipeJson {
 
     private static void assertStonecutting(RecipeSpec.Stonecutting spec, JsonObject json) {
         assertEquals("minecraft:stonecutting", json.get("type").getAsString());
-        assertEquals(spec.ingredient().reference(), json.get("ingredient").getAsString());
+
+        JsonElement ingredient = json.get("ingredient");
+        List<String> actual =
+                ingredient.isJsonArray()
+                        ? ingredient.getAsJsonArray().asList().stream()
+                                .map(JsonElement::getAsString)
+                                .collect(Collectors.toList())
+                        : List.of(ingredient.getAsString());
+        List<String> expected =
+                spec.ingredients().stream().map(Ingredient::reference).collect(Collectors.toList());
+        assertEquals(expected, actual, () -> "inputs of " + spec.namespace() + ":" + spec.path());
     }
 
     private static int resultCount(JsonObject json) {

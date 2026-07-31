@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "minecraft:warped_fence",
+  "result": {
+    "count": 3,
+    "id": "minecraft:stick"
+  }
+}

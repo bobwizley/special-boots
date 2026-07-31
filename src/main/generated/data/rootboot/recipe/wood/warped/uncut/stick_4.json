@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": [
+    "minecraft:warped_pressure_plate",
+    "minecraft:warped_sign",
+    "minecraft:warped_door",
+    "minecraft:warped_trapdoor"
+  ],
+  "result": {
+    "count": 4,
+    "id": "minecraft:stick"
+  }
+}

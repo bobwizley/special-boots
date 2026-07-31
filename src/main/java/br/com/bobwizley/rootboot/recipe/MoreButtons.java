@@ -90,7 +90,7 @@ final class MoreButtons {
                 family.button() + "_from_" + family.block() + "_stonecutting",
                 Category.REDSTONE,
                 Optional.empty(),
-                Ingredient.item(family.blockId()),
+                List.of(Ingredient.item(family.blockId())),
                 new Result(family.buttonId(), STONECUTTING_YIELD));
     }
 

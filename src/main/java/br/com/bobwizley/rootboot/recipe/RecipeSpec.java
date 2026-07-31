@@ -36,9 +36,11 @@ public sealed interface RecipeSpec
 
     /** Grouping used by the recipe book; irrelevant to gameplay but part of a real recipe. */
     enum Category {
+        BUILDING_BLOCKS,
         TOOLS,
         DECORATIONS,
         REDSTONE,
+        TRANSPORTATION,
         MISC
     }
 
@@ -103,13 +105,17 @@ public sealed interface RecipeSpec
             int cookingTime)
             implements RecipeSpec {}
 
-    /** A stonecutter conversion: one input block cut into a stack of the result. */
+    /**
+     * A stonecutter conversion: any one of the {@code ingredients} cut into a stack of the result. Several
+     * equivalent inputs share a single recipe — the way a log, a stripped log and both wood forms all cut
+     * into the same product — instead of multiplying into one identical recipe per input.
+     */
     record Stonecutting(
             String namespace,
             String path,
             Category category,
             Optional<String> group,
-            Ingredient ingredient,
+            List<Ingredient> ingredients,
             Result result)
             implements RecipeSpec {}
 }
