@@ -49,17 +49,27 @@ public final class Heavyfoot {
     }
 
     private static void flatten(ServerLevel level, Player player, BlockPos pos) {
-        if (isFlattenable(level.getBlockState(pos)) && level.mayInteract(player, pos)) {
+        if (isFlattenable(level.getBlockState(pos)) && mayChange(level, player, pos)) {
             level.setBlockAndUpdate(pos, Blocks.DIRT_PATH.defaultBlockState());
         }
     }
 
     private static boolean destroyVegetation(ServerLevel level, Player player, BlockPos pos) {
-        if (!isDestructible(level.getBlockState(pos)) || !level.mayInteract(player, pos)) {
+        if (!isDestructible(level.getBlockState(pos)) || !mayChange(level, player, pos)) {
             return false;
         }
 
         return level.destroyBlock(pos, true, player);
+    }
+
+    /**
+     * The effect changes blocks directly instead of going through the player's break flow, so
+     * the rules that flow would apply — spawn protection, world border, spectator and adventure
+     * restrictions — have to be checked here.
+     */
+    private static boolean mayChange(ServerLevel level, Player player, BlockPos pos) {
+        return level.mayInteract(player, pos)
+                && !player.blockActionRestricted(level, pos, player.gameMode());
     }
 
     private static boolean isFlattenable(BlockState state) {

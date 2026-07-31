@@ -9,6 +9,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -146,6 +147,34 @@ public final class HeavyfootGameTests {
                 Blocks.GRASS_BLOCK,
                 "Boots without the enchantment must not trample");
         finish(helper, player);
+    }
+
+    @GameTest
+    public void playersForbiddenFromChangingBlocksDoNotTrample(GameTestHelper helper) {
+        for (GameType gameMode : List.of(GameType.SPECTATOR, GameType.ADVENTURE)) {
+            Player player = helper.makeMockPlayer(gameMode);
+            gameMode.updatePlayerAbilities(player.getAbilities());
+            BlockPos absolute = helper.absolutePos(CENTER);
+            player.setPosRaw(absolute.getX() + 0.5, absolute.getY(), absolute.getZ() + 0.5);
+            helper.setBlock(CENTER.below(), Blocks.GRASS_BLOCK);
+            helper.setBlock(CENTER, Blocks.POPPY);
+
+            Heavyfoot.enable(1);
+            Heavyfoot.trample(helper.getLevel(), player);
+
+            assertBlockIs(
+                    helper,
+                    CENTER.below(),
+                    Blocks.GRASS_BLOCK,
+                    "A player in " + gameMode + " must not flatten soil");
+            assertBlockIs(
+                    helper,
+                    CENTER,
+                    Blocks.POPPY,
+                    "A player in " + gameMode + " must not destroy vegetation");
+            player.discard();
+        }
+        helper.succeed();
     }
 
     private static void assertDestroyedAtFeet(
