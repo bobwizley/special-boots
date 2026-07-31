@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 class RootBootRecipesTest {
 
     private RecipeSpec byId(String namespace, String path) {
-        return RootBootRecipes.all().stream()
+        return RootBootRecipes.simple().stream()
                 .filter(spec -> spec.namespace().equals(namespace) && spec.path().equals(path))
                 .findFirst()
                 .orElseThrow(() -> new AssertionError("missing recipe " + namespace + ":" + path));
@@ -26,7 +26,7 @@ class RootBootRecipesTest {
     @Test
     void shipsExactlyTheFourSimpleRecipes() {
         List<String> ids =
-                RootBootRecipes.all().stream()
+                RootBootRecipes.simple().stream()
                         .map(spec -> spec.namespace() + ":" + spec.path())
                         .collect(Collectors.toList());
 

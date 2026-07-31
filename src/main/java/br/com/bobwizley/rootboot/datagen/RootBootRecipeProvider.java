@@ -14,10 +14,12 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.recipes.SingleItemRecipeBuilder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 
 /**
@@ -66,6 +68,7 @@ public final class RootBootRecipeProvider extends FabricRecipeProvider {
                 switch (spec) {
                     case RecipeSpec.Shaped shaped -> emitShaped(shaped);
                     case RecipeSpec.Shapeless shapeless -> emitShapeless(shapeless);
+                    case RecipeSpec.Stonecutting stonecutting -> emitStonecutting(stonecutting);
                 }
             }
         }
@@ -84,6 +87,7 @@ public final class RootBootRecipeProvider extends FabricRecipeProvider {
                                     builder.define(symbol, item(ingredient.id()));
                                 }
                             });
+            spec.group().ifPresent(builder::group);
             builder.unlockedBy("has_ingredient", criterion(firstIngredient(spec)));
             builder.save(output, recipeKey(spec));
         }
@@ -99,8 +103,27 @@ public final class RootBootRecipeProvider extends FabricRecipeProvider {
                     builder.requires(item(ingredient.id()));
                 }
             }
+            spec.group().ifPresent(builder::group);
             builder.unlockedBy("has_ingredient", criterion(spec.ingredients().getFirst()));
             builder.save(output, recipeKey(spec));
+        }
+
+        private void emitStonecutting(RecipeSpec.Stonecutting spec) {
+            SingleItemRecipeBuilder builder =
+                    SingleItemRecipeBuilder.stonecutting(
+                            ingredient(spec.ingredient()),
+                            category(spec.category()),
+                            item(spec.result().item()),
+                            spec.result().count());
+            spec.group().ifPresent(builder::group);
+            builder.unlockedBy("has_ingredient", criterion(spec.ingredient()));
+            builder.save(output, recipeKey(spec));
+        }
+
+        private Ingredient ingredient(RecipeSpec.Ingredient ingredient) {
+            return ingredient.isTag()
+                    ? Ingredient.of(items.getOrThrow(itemTag(ingredient.id())))
+                    : Ingredient.of(item(ingredient.id()));
         }
 
         private Criterion<?> criterion(RecipeSpec.Ingredient ingredient) {
@@ -142,6 +165,7 @@ public final class RootBootRecipeProvider extends FabricRecipeProvider {
             return switch (category) {
                 case TOOLS -> RecipeCategory.TOOLS;
                 case DECORATIONS -> RecipeCategory.DECORATIONS;
+                case REDSTONE -> RecipeCategory.REDSTONE;
                 case MISC -> RecipeCategory.MISC;
             };
         }

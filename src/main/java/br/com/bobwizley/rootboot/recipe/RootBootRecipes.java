@@ -7,18 +7,27 @@ import br.com.bobwizley.rootboot.recipe.RecipeSpec.Shaped;
 import br.com.bobwizley.rootboot.recipe.RecipeSpec.Shapeless;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
- * The always-on simple recipes RootBoot ships. These have no runtime toggle: they are baked into the
- * datapack at build time and are the fixture the later declarative slices reuse.
+ * Every always-on recipe RootBoot ships, across features. These have no runtime toggle: they are baked
+ * into the datapack at build time.
  */
 public final class RootBootRecipes {
 
     private RootBootRecipes() {
     }
 
-    /** Clock and compass keep their vanilla ids so the cheaper versions replace the originals. */
     public static List<RecipeSpec> all() {
+        return Stream.concat(simple().stream(), MoreButtons.all().stream()).toList();
+    }
+
+    /**
+     * The four standalone recipes. Clock and compass keep their vanilla ids so the cheaper versions
+     * replace the originals; bell and wool-to-string are additive.
+     */
+    static List<RecipeSpec> simple() {
         return List.of(cheaperClock(), cheaperCompass(), bell(), woolToString());
     }
 
@@ -27,6 +36,7 @@ public final class RootBootRecipes {
                 "minecraft",
                 "clock",
                 Category.TOOLS,
+                Optional.empty(),
                 List.of(" # ", "#X#", " # "),
                 Map.of(
                         '#', Ingredient.item("minecraft:gold_nugget"),
@@ -39,6 +49,7 @@ public final class RootBootRecipes {
                 "minecraft",
                 "compass",
                 Category.TOOLS,
+                Optional.empty(),
                 List.of(" # ", "#X#", " # "),
                 Map.of(
                         '#', Ingredient.item("minecraft:iron_nugget"),
@@ -51,6 +62,7 @@ public final class RootBootRecipes {
                 "rootboot",
                 "bell",
                 Category.DECORATIONS,
+                Optional.empty(),
                 List.of("LLL", "SGS", "S S"),
                 Map.of(
                         'L', Ingredient.tag("minecraft:logs"),
@@ -64,6 +76,7 @@ public final class RootBootRecipes {
                 "rootboot",
                 "wool_to_string",
                 Category.MISC,
+                Optional.empty(),
                 List.of(Ingredient.tag("minecraft:wool")),
                 new Result("minecraft:string", 4));
     }
