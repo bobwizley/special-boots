@@ -6,6 +6,7 @@ import br.com.bobwizley.rootboot.feature.FeatureRegistry;
 import br.com.bobwizley.rootboot.feature.biomediscovery.BiomeDiscoveryFeature;
 import br.com.bobwizley.rootboot.feature.dayannouncement.DayAnnouncementFeature;
 import br.com.bobwizley.rootboot.feature.deathitemprotection.DeathItemProtectionFeature;
+import br.com.bobwizley.rootboot.feature.halfhealthbabies.HalfHealthBabiesFeature;
 import br.com.bobwizley.rootboot.feature.homingexperienceorb.HomingExperienceOrbFeature;
 import br.com.bobwizley.rootboot.feature.levelmilestone.LevelMilestoneFeature;
 import br.com.bobwizley.rootboot.feature.timeoffset.TimeOffsetFeature;
@@ -51,6 +52,7 @@ public final class RootBoot implements ModInitializer {
                 new HomingExperienceOrbFeature(),
                 new DeathItemProtectionFeature(),
                 new BiomeDiscoveryFeature(),
+                new HalfHealthBabiesFeature(),
                 new HeavyfootFeature(cfg.heavyfootRadius()),
                 new LightfootFeature()));
         if (cfg.ensureKeys(registry.featureIds())) {

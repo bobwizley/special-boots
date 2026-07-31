@@ -5,6 +5,7 @@ import br.com.bobwizley.rootboot.config.RootBootConfig;
 import br.com.bobwizley.rootboot.feature.biomediscovery.BiomeDiscoveryFeature;
 import br.com.bobwizley.rootboot.feature.dayannouncement.DayAnnouncementFeature;
 import br.com.bobwizley.rootboot.feature.deathitemprotection.DeathItemProtectionFeature;
+import br.com.bobwizley.rootboot.feature.halfhealthbabies.HalfHealthBabiesFeature;
 import br.com.bobwizley.rootboot.feature.heavyfoot.HeavyfootFeature;
 import br.com.bobwizley.rootboot.feature.homingexperienceorb.HomingExperienceOrbFeature;
 import br.com.bobwizley.rootboot.feature.levelmilestone.LevelMilestoneFeature;
@@ -83,6 +84,14 @@ public final class RootBootConfigScreen {
                 .setDefaultValue(true)
                 .setTooltip(Component.translatable("option.rootboot.biome_discovery.tooltip"))
                 .setSaveConsumer(value -> config.setEnabled(BiomeDiscoveryFeature.ID, value))
+                .build());
+
+        general.addEntry(entries.startBooleanToggle(
+                        Component.translatable("option.rootboot.half_health_babies"),
+                        config.isEnabled(HalfHealthBabiesFeature.ID))
+                .setDefaultValue(true)
+                .setTooltip(Component.translatable("option.rootboot.half_health_babies.tooltip"))
+                .setSaveConsumer(value -> config.setEnabled(HalfHealthBabiesFeature.ID, value))
                 .build());
 
         general.addEntry(entries.startBooleanToggle(
