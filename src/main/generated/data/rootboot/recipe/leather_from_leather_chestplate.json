@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:leather_chestplate"
+  ],
+  "result": {
+    "id": "minecraft:leather"
+  }
+}

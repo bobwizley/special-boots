@@ -7,6 +7,7 @@ import br.com.bobwizley.rootboot.recipe.RecipeSpec.Ingredient;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -24,10 +25,41 @@ final class RecipeJson {
                 Optional.ofNullable(json.get("group")).map(JsonElement::getAsString),
                 () -> "recipe book group of " + spec.namespace() + ":" + spec.path());
         switch (spec) {
+            case RecipeSpec.Cooking cooking -> assertCooking(cooking, json);
             case RecipeSpec.Shaped shaped -> assertShaped(shaped, json);
             case RecipeSpec.Shapeless shapeless -> assertShapeless(shapeless, json);
             case RecipeSpec.Stonecutting stonecutting -> assertStonecutting(stonecutting, json);
         }
+    }
+
+    /** The durations Minecraft leaves out of the JSON when a cooking recipe uses the plain furnace pace. */
+    private static int defaultCookingTime(RecipeSpec.CookingMethod method) {
+        return switch (method) {
+            case SMELTING -> 200;
+            case BLASTING -> 100;
+        };
+    }
+
+    private static void assertCooking(RecipeSpec.Cooking spec, JsonObject json) {
+        assertEquals(
+                "minecraft:" + spec.method().name().toLowerCase(Locale.ROOT),
+                json.get("type").getAsString());
+
+        JsonElement ingredient = json.get("ingredient");
+        List<String> inputs =
+                ingredient.isJsonArray()
+                        ? ingredient.getAsJsonArray().asList().stream()
+                                .map(JsonElement::getAsString)
+                                .collect(Collectors.toList())
+                        : List.of(ingredient.getAsString());
+        assertEquals(spec.inputs(), inputs);
+
+        assertEquals(spec.experience(), json.get("experience").getAsFloat());
+        assertEquals(
+                spec.cookingTime(),
+                Optional.ofNullable(json.get("cookingtime"))
+                        .map(JsonElement::getAsInt)
+                        .orElseGet(() -> defaultCookingTime(spec.method())));
     }
 
     private static void assertShaped(RecipeSpec.Shaped spec, JsonObject json) {

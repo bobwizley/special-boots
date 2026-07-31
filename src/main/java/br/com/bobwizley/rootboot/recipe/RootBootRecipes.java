@@ -20,7 +20,7 @@ public final class RootBootRecipes {
     }
 
     public static List<RecipeSpec> all() {
-        return Stream.concat(simple().stream(), MoreButtons.all().stream()).toList();
+        return Stream.of(simple(), MoreButtons.all(), Recycling.all()).flatMap(List::stream).toList();
     }
 
     /**

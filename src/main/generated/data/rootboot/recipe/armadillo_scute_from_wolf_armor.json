@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:wolf_armor"
+  ],
+  "result": {
+    "id": "minecraft:armadillo_scute"
+  }
+}

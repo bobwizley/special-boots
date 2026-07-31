@@ -14,11 +14,13 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.data.recipes.SingleItemRecipeBuilder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 
@@ -66,11 +68,39 @@ public final class RootBootRecipeProvider extends FabricRecipeProvider {
         public void buildRecipes() {
             for (RecipeSpec spec : RootBootRecipes.all()) {
                 switch (spec) {
+                    case RecipeSpec.Cooking cooking -> emitCooking(cooking);
                     case RecipeSpec.Shaped shaped -> emitShaped(shaped);
                     case RecipeSpec.Shapeless shapeless -> emitShapeless(shapeless);
                     case RecipeSpec.Stonecutting stonecutting -> emitStonecutting(stonecutting);
                 }
             }
+        }
+
+        private void emitCooking(RecipeSpec.Cooking spec) {
+            Ingredient inputs =
+                    Ingredient.of(spec.inputs().stream().map(this::item).toArray(Item[]::new));
+            SimpleCookingRecipeBuilder builder =
+                    switch (spec.method()) {
+                        case SMELTING ->
+                                SimpleCookingRecipeBuilder.smelting(
+                                        inputs,
+                                        category(spec.category()),
+                                        CookingBookCategory.MISC,
+                                        item(spec.result().item()),
+                                        spec.experience(),
+                                        spec.cookingTime());
+                        case BLASTING ->
+                                SimpleCookingRecipeBuilder.blasting(
+                                        inputs,
+                                        category(spec.category()),
+                                        CookingBookCategory.MISC,
+                                        item(spec.result().item()),
+                                        spec.experience(),
+                                        spec.cookingTime());
+                    };
+            spec.group().ifPresent(builder::group);
+            builder.unlockedBy("has_ingredient", has(item(spec.inputs().getFirst())));
+            builder.save(output, recipeKey(spec));
         }
 
         private void emitShaped(RecipeSpec.Shaped spec) {

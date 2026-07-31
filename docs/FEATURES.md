@@ -69,7 +69,7 @@ Recuperação de material base a partir de gear. **Output sempre 1 unidade** (re
   - leather (4 peças de armadura + `leather_horse_armor`) → 1 leather.
   - turtle (`turtle_helmet`) → 1 turtle_scute.
   - armadillo (`wolf_armor`) → 1 armadillo_scute.
-- ⚠️ **Verificar na implementação:** existência dos itens `copper_*`, `nautilus_armor`, `spear` no registry da 26.2 (o ref assume que existem).
+- ✅ **Resolvido — itens conferidos no registry da 26.2:** `copper_*`, `<material>_nautilus_armor` e `<material>_spear` existem para copper/iron/golden/diamond/netherite; chainmail só tem as 4 peças de armadura. A vanilla já recicla copper/iron/gold por um único id por método (`copper_nugget_from_smelting`, etc.), então o override reusa esses ids — é por isso que chainmail viaja dentro da receita do ferro.
 
 ---
 

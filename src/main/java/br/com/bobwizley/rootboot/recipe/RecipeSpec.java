@@ -14,7 +14,10 @@ import java.util.Optional;
  * recipe.
  */
 public sealed interface RecipeSpec
-        permits RecipeSpec.Shaped, RecipeSpec.Shapeless, RecipeSpec.Stonecutting {
+        permits RecipeSpec.Cooking,
+                RecipeSpec.Shaped,
+                RecipeSpec.Shapeless,
+                RecipeSpec.Stonecutting {
 
     String namespace();
 
@@ -74,6 +77,30 @@ public sealed interface RecipeSpec
             Optional<String> group,
             List<Ingredient> ingredients,
             Result result)
+            implements RecipeSpec {}
+
+    /** Whether a {@link Cooking} recipe belongs to the furnace or to the blast furnace. */
+    enum CookingMethod {
+        SMELTING,
+        BLASTING
+    }
+
+    /**
+     * A furnace or blast furnace conversion. {@code inputs} are item ids rather than
+     * {@link Ingredient}s: any of them cooks into the same result, and the eligible set is spelled out
+     * item by item instead of leaning on a tag, so the recipe can never reach an id the target version
+     * does not have.
+     */
+    record Cooking(
+            String namespace,
+            String path,
+            Category category,
+            Optional<String> group,
+            CookingMethod method,
+            List<String> inputs,
+            Result result,
+            float experience,
+            int cookingTime)
             implements RecipeSpec {}
 
     /** A stonecutter conversion: one input block cut into a stack of the result. */
