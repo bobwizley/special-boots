@@ -159,7 +159,6 @@ public final class HalfHealthBabiesGameTests {
         zombie.setHealth(reducedMaxHealth * 0.5F);
 
         LivingEntity loaded = reload(helper, zombie);
-        HalfHealthBabies.applyCurrentPolicy(loaded);
 
         assertClose(helper, loaded.getMaxHealth(), reducedMaxHealth, "reloaded baby max health");
         assertClose(
@@ -187,7 +186,6 @@ public final class HalfHealthBabiesGameTests {
 
         HalfHealthBabies.disable();
         LivingEntity loaded = reload(helper, zombie);
-        HalfHealthBabies.applyCurrentPolicy(loaded);
 
         assertClose(helper, loaded.getMaxHealth(), adultMaxHealth, "reverted baby max health");
         assertClose(
@@ -233,7 +231,10 @@ public final class HalfHealthBabiesGameTests {
         }
     }
 
-    /** Round-trips the entity through its save data, the way unloading and loading a chunk does. */
+    /**
+     * Round-trips the entity through its save data and back into the level, the way unloading and
+     * loading a chunk does. The returned entity has already been through the load hook.
+     */
     private static LivingEntity reload(GameTestHelper helper, LivingEntity entity) {
         ServerLevel level = helper.getLevel();
         TagValueOutput saved =
@@ -250,6 +251,9 @@ public final class HalfHealthBabiesGameTests {
         if (!(loaded instanceof LivingEntity livingEntity)) {
             helper.fail(Component.literal("The entity could not be reloaded from its save data"));
             throw new IllegalStateException();
+        }
+        if (!level.addFreshEntity(livingEntity)) {
+            helper.fail(Component.literal("The reloaded entity could not re-enter the level"));
         }
         return livingEntity;
     }

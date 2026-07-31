@@ -15,6 +15,12 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
  * modifiers contributed by other mods, equipment or the environment; its fixed id keeps repeated
  * applications from stacking. It is permanent so that it is saved with the entity — a baby loaded
  * while the feature is disabled must be recognizable as reduced in order to be reverted.
+ *
+ * <p>Half is exact everywhere inside {@code MAX_HEALTH}'s own range. Vanilla clamps the attribute
+ * to {@code [1, 1024]} after every modifier, so a mob whose unclamped value exceeds 2048 lands
+ * above half of the 1024 it would otherwise show, and one already at 1 cannot go lower. Both are
+ * the attribute's ceiling and floor rather than this feature's, and no reachable vanilla mob is
+ * near either.
  */
 public final class HalfHealthBabies {
 

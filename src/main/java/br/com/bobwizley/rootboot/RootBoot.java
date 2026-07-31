@@ -6,6 +6,7 @@ import br.com.bobwizley.rootboot.feature.FeatureRegistry;
 import br.com.bobwizley.rootboot.feature.biomediscovery.BiomeDiscoveryFeature;
 import br.com.bobwizley.rootboot.feature.dayannouncement.DayAnnouncementFeature;
 import br.com.bobwizley.rootboot.feature.deathitemprotection.DeathItemProtectionFeature;
+import br.com.bobwizley.rootboot.feature.halfhealthbabies.HalfHealthBabies;
 import br.com.bobwizley.rootboot.feature.halfhealthbabies.HalfHealthBabiesFeature;
 import br.com.bobwizley.rootboot.feature.homingexperienceorb.HomingExperienceOrbFeature;
 import br.com.bobwizley.rootboot.feature.levelmilestone.LevelMilestoneFeature;
@@ -16,7 +17,9 @@ import br.com.bobwizley.rootboot.feature.lightfoot.LightfootFeature;
 import java.nio.file.Path;
 import java.util.List;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.minecraft.world.entity.LivingEntity;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +64,16 @@ public final class RootBoot implements ModInitializer {
 
         List<String> registered = registry.registerEnabled(cfg);
         LOGGER.info("RootBoot registered {} behavior feature(s): {}", registered.size(), registered);
+
+        // Persistence exception: the baby reduction is saved inside the entity, so the load path
+        // must reconcile it even when Half-health Babies is disabled. Leaving that to the entity's
+        // first tick would keep a baby reduced — and let it be saved reduced again — for as long as
+        // its chunk stays loaded outside the simulation distance.
+        ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> {
+            if (entity instanceof LivingEntity livingEntity) {
+                HalfHealthBabies.applyCurrentPolicy(livingEntity);
+            }
+        });
 
         // Persistence exception: even when Time Offset is disabled, a world's first
         // initialization must be recorded as evaluated so that enabling the feature later
