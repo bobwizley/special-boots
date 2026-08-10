@@ -7,8 +7,10 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -25,9 +27,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * The randomness stays controlled without touching the roll: the eligibility cases return
- * {@link CropsExperience#NO_CHANCE} whatever the roll is, and the gourds' 100% always beats a
- * roll drawn from {@code [0, 1)}, so every assertion below is deterministic.
+ * The roll is driven, never observed: {@link CropsExperience.Roll} lets each case pin the drawn
+ * value and count the draws, so the odds, the "single roll" rule and the eligibility gate are all
+ * asserted deterministically instead of by sampling a frequency.
  */
 public final class CropsExperienceGameTests {
 
@@ -47,10 +49,7 @@ public final class CropsExperienceGameTests {
     @GameTest
     public void melonAndPumpkinAlwaysReward(GameTestHelper helper) {
         assertChance(
-                helper,
-                CropsExperience.GOURD_CHANCE,
-                Blocks.MELON.defaultBlockState(),
-                bareHand());
+                helper, CropsExperience.GOURD_CHANCE, Blocks.MELON.defaultBlockState(), bareHand());
         assertChance(
                 helper,
                 CropsExperience.GOURD_CHANCE,
@@ -111,10 +110,51 @@ public final class CropsExperienceGameTests {
         helper.succeed();
     }
 
+    @GameTest
+    public void theRollDecidesAgainstTheCropChance(GameTestHelper helper) {
+        assertRolledHarvest(helper, mature(Blocks.WHEAT), 0.0F, true);
+        assertRolledHarvest(helper, mature(Blocks.WHEAT), Math.nextDown(0.75F), true);
+        assertRolledHarvest(helper, mature(Blocks.WHEAT), 0.75F, false);
+        assertRolledHarvest(helper, mature(Blocks.WHEAT), 0.99F, false);
+        helper.succeed();
+    }
+
+    /** A roll of {@code [0, 1)} can never reach 1.0, which is what makes the gourds unconditional. */
+    @GameTest
+    public void theGourdChanceBeatsEveryRoll(GameTestHelper helper) {
+        assertRolledHarvest(helper, Blocks.MELON.defaultBlockState(), Math.nextDown(1.0F), true);
+        helper.succeed();
+    }
+
+    @GameTest
+    public void onlyEligibleHarvestsDrawARoll(GameTestHelper helper) {
+        assertDraws(helper, mature(Blocks.WHEAT), bareHand(), 1);
+        assertDraws(helper, Blocks.MELON.defaultBlockState(), bareHand(), 1);
+        assertDraws(helper, growing(Blocks.WHEAT), bareHand(), 0);
+        assertDraws(helper, mature(Blocks.WHEAT), enchanted(helper, Enchantments.SILK_TOUCH), 0);
+        assertDraws(helper, Blocks.DIRT.defaultBlockState(), bareHand(), 0);
+        helper.succeed();
+    }
+
+    @GameTest
+    public void aDisabledFeatureNeitherRollsNorAwards(GameTestHelper helper) {
+        CropsExperience.disable();
+        try {
+            assertDraws(helper, Blocks.MELON.defaultBlockState(), bareHand(), 0);
+            breakMelon(helper, miner(helper, GameType.SURVIVAL, bareHand()));
+            assertNoOrbs(helper, "A disabled feature must award nothing");
+        } finally {
+            CropsExperience.enable();
+        }
+        helper.succeed();
+    }
+
     /** Fortune is in hand to prove the reward neither scales nor rolls twice. */
     @GameTest
-    public void aHarvestAwardsExactlyOneOrbWorthOnePoint(GameTestHelper helper) {
-        harvest(helper, Blocks.MELON.defaultBlockState(), enchanted(helper, Enchantments.FORTUNE));
+    public void aPlayerBreakAwardsExactlyOneOrbWorthOnePoint(GameTestHelper helper) {
+        breakMelon(
+                helper,
+                miner(helper, GameType.SURVIVAL, enchanted(helper, Enchantments.FORTUNE)));
 
         List<ExperienceOrb> orbs = orbs(helper);
         helper.assertTrue(
@@ -123,6 +163,32 @@ public final class CropsExperienceGameTests {
         helper.assertTrue(
                 orbs.getFirst().getValue() == 1,
                 "The orb must be worth one point (found " + orbs.getFirst().getValue() + ")");
+        helper.succeed();
+    }
+
+    /**
+     * The tool breaks on this very swing, so reading the player's hand after the break would find
+     * no Silk Touch — the reward must still be denied by the copy taken before the damage.
+     */
+    @GameTest
+    public void silkTouchIsReadFromTheToolBeforeItBreaks(GameTestHelper helper) {
+        ItemStack silkTouch = enchanted(helper, Enchantments.SILK_TOUCH);
+        silkTouch.setDamageValue(silkTouch.getMaxDamage() - 1);
+        ServerPlayer player = miner(helper, GameType.SURVIVAL, silkTouch);
+
+        breakMelon(helper, player);
+
+        helper.assertTrue(
+                player.getMainHandItem().isEmpty(), "The test needs the tool to break on the swing");
+        assertNoOrbs(helper, "Silk Touch must be read from the tool the harvest started with");
+        helper.succeed();
+    }
+
+    @GameTest
+    public void acreativeBreakAwardsNothing(GameTestHelper helper) {
+        breakMelon(helper, miner(helper, GameType.CREATIVE, bareHand()));
+
+        assertNoOrbs(helper, "A creative break drops nothing and must award nothing");
         helper.succeed();
     }
 
@@ -135,23 +201,41 @@ public final class CropsExperienceGameTests {
         helper.succeed();
     }
 
-    @GameTest
-    public void aDisabledFeatureAwardsNothing(GameTestHelper helper) {
-        CropsExperience.disable();
-        try {
-            harvest(helper, Blocks.MELON.defaultBlockState(), bareHand());
-            assertNoOrbs(helper, "A disabled feature must award nothing");
-        } finally {
-            CropsExperience.enable();
-        }
-        helper.succeed();
+    private static ServerPlayer miner(GameTestHelper helper, GameType gameType, ItemStack tool) {
+        ServerPlayer player = (ServerPlayer) helper.makeMockServerPlayer(gameType);
+        player.setItemInHand(InteractionHand.MAIN_HAND, tool);
+        return player;
     }
 
-    private static void harvest(GameTestHelper helper, BlockState state, ItemStack tool) {
-        BlockPos absolute = helper.absolutePos(HARVESTED);
-        Player player = helper.makeMockPlayer(GameType.SURVIVAL);
-        state.getBlock()
-                .playerDestroy(helper.getLevel(), player, absolute, state, null, tool);
+    private static void breakMelon(GameTestHelper helper, ServerPlayer player) {
+        helper.setBlock(HARVESTED, Blocks.MELON);
+        player.gameMode.destroyBlock(helper.absolutePos(HARVESTED));
+    }
+
+    private static void assertRolledHarvest(
+            GameTestHelper helper, BlockState state, float roll, boolean awarded) {
+        clearOrbs(helper);
+        CropsExperience.harvest(
+                helper.getLevel(), helper.absolutePos(HARVESTED), state, bareHand(), () -> roll);
+
+        int found = orbs(helper).size();
+        helper.assertTrue(
+                found == (awarded ? 1 : 0),
+                state.getBlock().getName().getString() + " rolled " + roll
+                        + " must award " + (awarded ? 1 : 0) + " orb(s) (found " + found + ")");
+    }
+
+    private static void assertDraws(
+            GameTestHelper helper, BlockState state, ItemStack tool, int expected) {
+        clearOrbs(helper);
+        CountingRoll roll = new CountingRoll();
+        CropsExperience.harvest(
+                helper.getLevel(), helper.absolutePos(HARVESTED), state, tool, roll);
+
+        helper.assertTrue(
+                roll.draws == expected,
+                state.getBlock().getName().getString() + " must draw " + expected
+                        + " roll(s) (drew " + roll.draws + ")");
     }
 
     private static void assertChance(
@@ -166,6 +250,10 @@ public final class CropsExperienceGameTests {
     private static void assertNoOrbs(GameTestHelper helper, String message) {
         List<ExperienceOrb> orbs = orbs(helper);
         helper.assertTrue(orbs.isEmpty(), message + " (found " + orbs.size() + " orb(s))");
+    }
+
+    private static void clearOrbs(GameTestHelper helper) {
+        orbs(helper).forEach(Entity::discard);
     }
 
     private static List<ExperienceOrb> orbs(GameTestHelper helper) {
@@ -211,5 +299,16 @@ public final class CropsExperienceGameTests {
 
     private static RegistryAccess registries(GameTestHelper helper) {
         return helper.getLevel().registryAccess();
+    }
+
+    private static final class CountingRoll implements CropsExperience.Roll {
+
+        private int draws;
+
+        @Override
+        public float next() {
+            draws++;
+            return 0.0F;
+        }
     }
 }

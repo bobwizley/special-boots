@@ -53,17 +53,29 @@ public final class CropsExperience {
     }
 
     public static void harvest(Level level, BlockPos pos, BlockState state, ItemStack tool) {
-        if (!enabled || !(level instanceof ServerLevel serverLevel)) {
+        if (level instanceof ServerLevel serverLevel) {
+            harvest(serverLevel, pos, state, tool, serverLevel.getRandom()::nextFloat);
+        }
+    }
+
+    /**
+     * The roll is a parameter so that the game tests can drive the odds and count the draws; the
+     * single {@link Roll#next()} below is what makes "one roll per harvest" a property of the code
+     * rather than of a comment.
+     */
+    static void harvest(
+            ServerLevel level, BlockPos pos, BlockState state, ItemStack tool, Roll roll) {
+        if (!enabled) {
             return;
         }
 
-        float chance = chance(serverLevel.registryAccess(), state, tool);
-        if (chance <= NO_CHANCE || serverLevel.getRandom().nextFloat() >= chance) {
+        float chance = chance(level.registryAccess(), state, tool);
+        if (chance <= NO_CHANCE || roll.next() >= chance) {
             return;
         }
 
-        serverLevel.addFreshEntity(new ExperienceOrb(
-                serverLevel, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, ORB_VALUE));
+        level.addFreshEntity(new ExperienceOrb(
+                level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, ORB_VALUE));
     }
 
     /**
@@ -97,5 +109,12 @@ public final class CropsExperience {
                 .get(Enchantments.SILK_TOUCH)
                 .map(silkTouch -> EnchantmentHelper.getItemEnchantmentLevel(silkTouch, tool) > 0)
                 .orElse(false);
+    }
+
+    @FunctionalInterface
+    interface Roll {
+
+        /** A value in {@code [0, 1)}, as drawn by {@code RandomSource.nextFloat}. */
+        float next();
     }
 }
