@@ -3,6 +3,7 @@ package br.com.bobwizley.rootboot.client;
 import br.com.bobwizley.rootboot.RootBoot;
 import br.com.bobwizley.rootboot.config.RootBootConfig;
 import br.com.bobwizley.rootboot.feature.biomediscovery.BiomeDiscoveryFeature;
+import br.com.bobwizley.rootboot.feature.cropsexperience.CropsExperienceFeature;
 import br.com.bobwizley.rootboot.feature.dayannouncement.DayAnnouncementFeature;
 import br.com.bobwizley.rootboot.feature.deathitemprotection.DeathItemProtectionFeature;
 import br.com.bobwizley.rootboot.feature.halfhealthbabies.HalfHealthBabiesFeature;
@@ -67,6 +68,14 @@ public final class RootBootConfigScreen {
                 .setTooltip(Component.translatable(
                         "option.rootboot.homing_experience_orb.tooltip"))
                 .setSaveConsumer(value -> config.setEnabled(HomingExperienceOrbFeature.ID, value))
+                .build());
+
+        general.addEntry(entries.startBooleanToggle(
+                        Component.translatable("option.rootboot.crops_experience"),
+                        config.isEnabled(CropsExperienceFeature.ID))
+                .setDefaultValue(true)
+                .setTooltip(Component.translatable("option.rootboot.crops_experience.tooltip"))
+                .setSaveConsumer(value -> config.setEnabled(CropsExperienceFeature.ID, value))
                 .build());
 
         general.addEntry(entries.startBooleanToggle(
