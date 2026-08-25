@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "br.com.bobwizley.rootboot.client.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "LevelEventHandlerMixin",
+    "LivingEntityMixin",
+    "LocalPlayerMixin",
+    "MusicManagerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

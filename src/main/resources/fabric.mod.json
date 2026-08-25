@@ -25,7 +25,11 @@
     ]
   },
   "mixins": [
-    "rootboot.mixins.json"
+    "rootboot.mixins.json",
+    {
+      "config": "rootboot.client.mixins.json",
+      "environment": "client"
+    }
   ],
   "depends": {
     "fabricloader": ">=0.19.3",

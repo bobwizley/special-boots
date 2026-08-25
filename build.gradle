@@ -55,6 +55,13 @@ loom {
     }
 }
 
+// The client features are unit tested from src/test, so the test source set needs the client
+// source set that splitEnvironmentSourceSets creates above.
+sourceSets.test {
+    compileClasspath += sourceSets.client.output + sourceSets.client.compileClasspath
+    runtimeClasspath += sourceSets.client.output + sourceSets.client.runtimeClasspath
+}
+
 fabricApi {
     configureDataGeneration {
         // Generated JSON is committed here and packaged into the JAR; it is never edited by hand

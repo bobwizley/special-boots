@@ -1,6 +1,10 @@
 package br.com.bobwizley.rootboot.client;
 
 import br.com.bobwizley.rootboot.RootBoot;
+import br.com.bobwizley.rootboot.client.feature.jukeboxmusicoverride.JukeboxMusicOverrideFeature;
+import br.com.bobwizley.rootboot.client.feature.localdeathsound.LocalDeathSoundFeature;
+import br.com.bobwizley.rootboot.client.feature.lowhealthsound.LowHealthSoundFeature;
+import br.com.bobwizley.rootboot.client.feature.stopmusicondeath.StopMusicOnDeathFeature;
 import br.com.bobwizley.rootboot.config.RootBootConfig;
 import br.com.bobwizley.rootboot.feature.biomediscovery.BiomeDiscoveryFeature;
 import br.com.bobwizley.rootboot.feature.cropsexperience.CropsExperienceFeature;
@@ -127,6 +131,38 @@ public final class RootBootConfigScreen {
                 .setDefaultValue(true)
                 .setTooltip(Component.translatable("option.rootboot.lightfoot.tooltip"))
                 .setSaveConsumer(value -> config.setEnabled(LightfootFeature.ID, value))
+                .build());
+
+        general.addEntry(entries.startBooleanToggle(
+                        Component.translatable("option.rootboot.jukebox_music_override"),
+                        config.isEnabled(JukeboxMusicOverrideFeature.ID))
+                .setDefaultValue(true)
+                .setTooltip(Component.translatable("option.rootboot.jukebox_music_override.tooltip"))
+                .setSaveConsumer(value -> config.setEnabled(JukeboxMusicOverrideFeature.ID, value))
+                .build());
+
+        general.addEntry(entries.startBooleanToggle(
+                        Component.translatable("option.rootboot.local_death_sound"),
+                        config.isEnabled(LocalDeathSoundFeature.ID))
+                .setDefaultValue(true)
+                .setTooltip(Component.translatable("option.rootboot.local_death_sound.tooltip"))
+                .setSaveConsumer(value -> config.setEnabled(LocalDeathSoundFeature.ID, value))
+                .build());
+
+        general.addEntry(entries.startBooleanToggle(
+                        Component.translatable("option.rootboot.stop_music_on_death"),
+                        config.isEnabled(StopMusicOnDeathFeature.ID))
+                .setDefaultValue(true)
+                .setTooltip(Component.translatable("option.rootboot.stop_music_on_death.tooltip"))
+                .setSaveConsumer(value -> config.setEnabled(StopMusicOnDeathFeature.ID, value))
+                .build());
+
+        general.addEntry(entries.startBooleanToggle(
+                        Component.translatable("option.rootboot.low_health_sound"),
+                        config.isEnabled(LowHealthSoundFeature.ID))
+                .setDefaultValue(true)
+                .setTooltip(Component.translatable("option.rootboot.low_health_sound.tooltip"))
+                .setSaveConsumer(value -> config.setEnabled(LowHealthSoundFeature.ID, value))
                 .build());
 
         return builder.build();
