@@ -4,9 +4,10 @@
   "compatibilityLevel": "JAVA_25",
   "client": [
     "LevelEventHandlerMixin",
-    "LivingEntityMixin",
+    "LocalDeathSoundMixin",
     "LocalPlayerMixin",
-    "MusicManagerMixin"
+    "MusicManagerMixin",
+    "StopMusicOnDeathMixin"
   ],
   "injectors": {
     "defaultRequire": 1

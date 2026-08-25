@@ -2,13 +2,16 @@ package br.com.bobwizley.rootboot.client.feature.lowhealthsound;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 
 public final class LowHealthSound {
 
     public static final float THRESHOLD = 8.0F;
 
     private static final float VOLUME = 0.5F;
+    private static final float PITCH = 1.0F;
 
     private static boolean enabled;
 
@@ -28,9 +31,14 @@ public final class LowHealthSound {
     }
 
     public static void healthChanged(float previousHealth, float newHealth) {
-        if (enabled && beats(previousHealth, newHealth)) {
-            Minecraft.getInstance().getSoundManager()
-                    .play(SimpleSoundInstance.forUI(SoundEvents.WARDEN_HEARTBEAT, VOLUME));
+        if (!enabled || !beats(previousHealth, newHealth)) {
+            return;
         }
+
+        // Attached to the listener rather than to a position, so nobody else can hear it.
+        Minecraft.getInstance().getSoundManager().play(new SimpleSoundInstance(
+                SoundEvents.WARDEN_HEARTBEAT.location(), SoundSource.PLAYERS, VOLUME, PITCH,
+                SoundInstance.createUnseededRandom(), false, 0, SoundInstance.Attenuation.NONE,
+                0.0, 0.0, 0.0, true));
     }
 }

@@ -1,7 +1,6 @@
 package br.com.bobwizley.rootboot.client.mixin;
 
 import br.com.bobwizley.rootboot.client.feature.localdeathsound.LocalDeathSound;
-import br.com.bobwizley.rootboot.client.feature.stopmusicondeath.StopMusicOnDeath;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-abstract class LivingEntityMixin {
+abstract class LocalDeathSoundMixin {
 
     /**
      * The damage event packet is the only place the client learns a damage type; the death event
@@ -23,13 +22,9 @@ abstract class LivingEntityMixin {
     }
 
     @Inject(method = "handleEntityEvent", at = @At("HEAD"))
-    private void rootboot$onDeath(byte event, CallbackInfo ci) {
-        if (event != EntityEvent.DEATH) {
-            return;
+    private void rootboot$playDeathSound(byte event, CallbackInfo ci) {
+        if (event == EntityEvent.DEATH) {
+            LocalDeathSound.died((LivingEntity) (Object) this);
         }
-
-        LivingEntity entity = (LivingEntity) (Object) this;
-        LocalDeathSound.died(entity);
-        StopMusicOnDeath.died(entity);
     }
 }

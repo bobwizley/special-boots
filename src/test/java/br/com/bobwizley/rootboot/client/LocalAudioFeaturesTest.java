@@ -38,7 +38,7 @@ class LocalAudioFeaturesTest {
     }
 
     @Test
-    void eachToggleRegistersIndependently() {
+    void eachToggleControlsOnlyItsOwnRegistration() {
         List<String> ids = new FeatureRegistry(features()).featureIds();
 
         for (String disabled : ids) {

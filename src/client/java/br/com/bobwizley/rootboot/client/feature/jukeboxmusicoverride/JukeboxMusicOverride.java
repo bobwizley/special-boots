@@ -2,7 +2,6 @@ package br.com.bobwizley.rootboot.client.feature.jukeboxmusicoverride;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.sounds.MusicManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.JukeboxSong;
@@ -22,15 +21,15 @@ public final class JukeboxMusicOverride {
         enabled = true;
     }
 
-    public static void discStarted(BlockPos pos, JukeboxSong song, long gameTime) {
+    public static void discStarted(BlockPos pos, JukeboxSong song, ClientLevel level) {
         if (enabled) {
-            JUKEBOXES.started(pos, song.lengthInTicks(), gameTime);
+            jukeboxesOf(level).started(pos, song.lengthInTicks(), level.getGameTime());
         }
     }
 
-    public static void discStopped(BlockPos pos) {
+    public static void discStopped(BlockPos pos, ClientLevel level) {
         if (enabled) {
-            JUKEBOXES.stopped(pos);
+            jukeboxesOf(level).stopped(pos);
         }
     }
 
@@ -46,10 +45,7 @@ public final class JukeboxMusicOverride {
 
         Minecraft minecraft = Minecraft.getInstance();
         ClientLevel level = minecraft.level;
-        LocalPlayer player = minecraft.player;
-        forgetJukeboxesFromOtherLevels(level);
-        if (level == null || player == null
-                || !JUKEBOXES.anyAudibleFrom(player.position(), level.getGameTime())) {
+        if (level == null || !jukeboxesOf(level).anyAudibleFrom(listenerPosition(), level.getGameTime())) {
             ambientMusicInterrupted = false;
             return false;
         }
@@ -62,13 +58,23 @@ public final class JukeboxMusicOverride {
     }
 
     /**
-     * Positions from a level the client has left would keep matching by coordinate alone, and
-     * that level's stop events can no longer arrive.
+     * The jukebox is mixed in relative to the audio listener, which is the camera and not the
+     * player: in spectator or with a detached camera the two are far apart.
      */
-    private static void forgetJukeboxesFromOtherLevels(ClientLevel level) {
+    private static net.minecraft.world.phys.Vec3 listenerPosition() {
+        return Minecraft.getInstance().getSoundManager().getListenerTransform().position();
+    }
+
+    /**
+     * Positions from a level the client has left would keep matching by coordinate alone, and
+     * that level's stop events can no longer arrive. The check runs on the recording path too,
+     * because a start event for the new level can arrive before the next music tick.
+     */
+    private static AudibleJukeboxes jukeboxesOf(ClientLevel level) {
         if (level != trackedLevel) {
             trackedLevel = level;
             JUKEBOXES.clear();
         }
+        return JUKEBOXES;
     }
 }
